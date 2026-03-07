@@ -41,3 +41,19 @@ kbs_support_roles := {
     "KBSSupportReadOnly",
     "Webserver-Role",
 }
+
+# Known vendor role names.
+# Roles owned by external vendors that must have a valid "type" tag.
+kbs_vendor_roles := {
+    "VendorMonitoringRole",
+    "VendorBackupAgent",
+    "ThirdPartyAuditRole",
+}
+
+# Known service role names.
+# Roles used by internal services that must have a valid "type" tag.
+kbs_service_roles := {
+    "AppDeploymentRole",
+    "DataPipelineExecutor",
+    "CICDServiceRole",
+}

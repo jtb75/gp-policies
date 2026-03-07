@@ -1,0 +1,10 @@
+{
+  "RoleName": "ThirdPartyAuditRole",
+  "Arn": "arn:aws:iam::123456789012:role/ThirdPartyAuditRole",
+  "Tags": [
+    { "Key": "type", "Value": "unknown" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

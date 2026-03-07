@@ -1,0 +1,10 @@
+{
+  "RoleName": "DataPipelineExecutor",
+  "Arn": "arn:aws:iam::123456789012:role/DataPipelineExecutor",
+  "Tags": [
+    { "Key": "type", "Value": "service" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

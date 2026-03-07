@@ -1,0 +1,8 @@
+{
+  "RoleName": "AppDeploymentRole",
+  "Arn": "arn:aws:iam::123456789012:role/AppDeploymentRole",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

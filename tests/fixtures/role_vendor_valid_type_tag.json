@@ -1,0 +1,10 @@
+{
+  "RoleName": "VendorBackupAgent",
+  "Arn": "arn:aws:iam::123456789012:role/VendorBackupAgent",
+  "Tags": [
+    { "Key": "type", "Value": "vendor" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

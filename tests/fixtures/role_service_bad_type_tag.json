@@ -1,0 +1,10 @@
+{
+  "RoleName": "CICDServiceRole",
+  "Arn": "arn:aws:iam::123456789012:role/CICDServiceRole",
+  "Tags": [
+    { "Key": "type", "Value": "unknown" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

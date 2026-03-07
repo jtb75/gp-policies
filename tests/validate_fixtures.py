@@ -75,6 +75,16 @@ TESTS = [
     ("role_support_valid_type_tag.json", "rego/aws_support_role_missing_type_tag.rego", "role", "pass"),
     ("role_support_bad_type_tag.json", "rego/aws_support_role_missing_type_tag.rego", "role", "fail"),
     ("role_not_support.json", "rego/aws_support_role_missing_type_tag.rego", "role", "skip"),
+    # Vendor role missing type tag
+    ("role_vendor_no_type_tag.json", "rego/aws_vendor_role_missing_type_tag.rego", "role", "fail"),
+    ("role_vendor_valid_type_tag.json", "rego/aws_vendor_role_missing_type_tag.rego", "role", "pass"),
+    ("role_vendor_bad_type_tag.json", "rego/aws_vendor_role_missing_type_tag.rego", "role", "fail"),
+    ("role_not_vendor.json", "rego/aws_vendor_role_missing_type_tag.rego", "role", "skip"),
+    # Service role missing type tag
+    ("role_service_no_type_tag.json", "rego/aws_service_role_missing_type_tag.rego", "role", "fail"),
+    ("role_service_valid_type_tag.json", "rego/aws_service_role_missing_type_tag.rego", "role", "pass"),
+    ("role_service_bad_type_tag.json", "rego/aws_service_role_missing_type_tag.rego", "role", "fail"),
+    ("role_not_service.json", "rego/aws_service_role_missing_type_tag.rego", "role", "skip"),
     # Snapshot untrusted sharing
     ("snapshot_sharing_pass.json", "rego/aws_snapshot_untrusted_sharing.rego", "ec2#unencryptedsnapshot", "pass"),
     ("snapshot_sharing_fail_public.json", "rego/aws_snapshot_untrusted_sharing.rego", "ec2#unencryptedsnapshot", "fail"),
