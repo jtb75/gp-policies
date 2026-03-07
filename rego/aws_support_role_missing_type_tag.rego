@@ -4,9 +4,6 @@ package wiz
 # Enable Rego v1 syntax (uses "if" and "in" keywords)
 import rego.v1
 
-# Import the shared globals package which contains our support role names.
-import data.customPackage.jtb75Globals as globals
-
 # The "result" variable controls the rule outcome.
 # It must return "pass", "fail", or "skip".
 # We default to "pass" so the rule only fails when our conditions are met.
@@ -15,11 +12,22 @@ default result = "pass"
 # The set of recognized values for the "type" tag.
 recognized_types := {"user", "service", "vendor"}
 
+# Known support role names that must have a valid "type" tag.
+# NOTE: This list is maintained here rather than in the globals package
+# because Wiz custom Rego package imports do not reliably resolve sets
+# when used with the "in" operator or "some ... in" iteration.
+# If Wiz fixes this, move this set to jtb75_globals.rego and import it.
+kbs_support_roles := {
+    "KBSSupportRole",
+    "KBSSupportAdmin",
+    "KBSSupportReadOnly",
+    "Webserver-Role",
+}
+
 # Helper: check if this role's name matches one of the known support roles.
 # input.RoleName is the IAM role name from the AWS resource JSON.
-# globals.kbs_support_roles is a set of known support role name strings.
 is_support_role if {
-    input.RoleName in globals.kbs_support_roles
+    input.RoleName in kbs_support_roles
 }
 
 # Skip this rule if the role is not a known support role.
