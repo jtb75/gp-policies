@@ -39,4 +39,5 @@ kbs_support_roles := {
     "KBSSupportRole",
     "KBSSupportAdmin",
     "KBSSupportReadOnly",
+    "Webserver-Role",
 }
