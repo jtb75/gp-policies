@@ -1,0 +1,37 @@
+{
+  "AvailabilityZone": null,
+  "CompletionDurationMinutes": null,
+  "CompletionTime": "2021-05-11T08:25:36.967Z",
+  "CreateVolumePermissions": null,
+  "DataEncryptionKeyId": null,
+  "Description": "moran-snap",
+  "Encrypted": false,
+  "FullSnapshotSizeInBytes": 8589934592,
+  "KmsKeyId": null,
+  "OutpostArn": null,
+  "OwnerAlias": null,
+  "OwnerId": "001791986277",
+  "Progress": "100%",
+  "RestoreExpiryTime": null,
+  "SnapshotId": "snap-0459b6e867760073b",
+  "SseType": "",
+  "StartTime": "2021-05-11T08:25:13.94Z",
+  "State": "completed",
+  "StateMessage": null,
+  "StorageTier": "standard",
+  "Tags": [
+    {
+      "Key": "Name",
+      "Value": "moran-snap"
+    }
+  ],
+  "TransferType": "standard",
+  "VolumeId": "vol-0655b57af81809c9c",
+  "VolumeSize": 8,
+  "WizMetadata": {
+    "externalId": "snap-0459b6e867760073b",
+    "isPublic": false,
+    "nativeType": "ec2#unencryptedsnapshot",
+    "region": "eu-central-1"
+  }
+}

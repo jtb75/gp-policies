@@ -1,0 +1,20 @@
+{
+  "UserName": "svc-properly-tagged",
+  "Arn": "arn:aws:iam::123456789012:user/svc-properly-tagged",
+  "Tags": [
+    {
+      "Key": "type",
+      "Value": "service"
+    }
+  ],
+  "userCredentials": {
+    "AccessKey1Active": "false",
+    "AccessKey1LastRotated": "N/A",
+    "AccessKey2Active": "false",
+    "AccessKey2LastRotated": "N/A"
+  },
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

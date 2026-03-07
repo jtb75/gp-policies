@@ -1,0 +1,32 @@
+{
+  "AvailabilityZone": null,
+  "CompletionDurationMinutes": null,
+  "CompletionTime": "2024-10-18T14:57:31.745Z",
+  "CreateVolumePermissions": null,
+  "DataEncryptionKeyId": null,
+  "Description": "Wiz Auto remediation snapshot",
+  "Encrypted": true,
+  "FullSnapshotSizeInBytes": 3984064512,
+  "KmsKeyId": "arn:aws:kms:us-west-2:984186218765:key/c999d7d0-9f9d-4b64-85f5-9501a5962158",
+  "OutpostArn": null,
+  "OwnerAlias": null,
+  "OwnerId": "984186218765",
+  "Progress": "100%",
+  "RestoreExpiryTime": null,
+  "SnapshotId": "snap-0794d954bf252d4a7",
+  "SseType": "",
+  "StartTime": "2024-10-18T14:57:17.796Z",
+  "State": "completed",
+  "StateMessage": null,
+  "StorageTier": "standard",
+  "Tags": null,
+  "TransferType": "standard",
+  "VolumeId": "vol-00379adc8a2389303",
+  "VolumeSize": 8,
+  "WizMetadata": {
+    "externalId": "snap-0794d954bf252d4a7",
+    "isPublic": false,
+    "nativeType": "ec2#encryptedsnapshot",
+    "region": "us-west-2"
+  }
+}

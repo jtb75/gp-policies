@@ -1,0 +1,15 @@
+{
+  "UserName": "untagged-temp-admin",
+  "Arn": "arn:aws:iam::123456789012:user/untagged-temp-admin",
+  "Tags": [],
+  "userCredentials": {
+    "AccessKey1Active": "true",
+    "AccessKey1LastRotated": "2026-02-20T00:00:00Z",
+    "AccessKey2Active": "false",
+    "AccessKey2LastRotated": "N/A"
+  },
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

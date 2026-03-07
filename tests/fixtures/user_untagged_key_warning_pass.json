@@ -1,0 +1,20 @@
+{
+  "UserName": "unknown-type-recent-rotate",
+  "Arn": "arn:aws:iam::123456789012:user/unknown-type-recent-rotate",
+  "Tags": [
+    {
+      "Key": "type",
+      "Value": "unknown"
+    }
+  ],
+  "userCredentials": {
+    "AccessKey1Active": "true",
+    "AccessKey1LastRotated": "2026-02-15T00:00:00Z",
+    "AccessKey2Active": "false",
+    "AccessKey2LastRotated": "N/A"
+  },
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

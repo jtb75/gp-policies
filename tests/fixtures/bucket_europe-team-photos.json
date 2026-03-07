@@ -1,0 +1,272 @@
+{
+  "BucketArn": "arn:aws:s3:::europe-team-photos",
+  "BucketRegion": "us-east-2",
+  "CreationDate": "2021-04-18T15:17:57Z",
+  "Name": "europe-team-photos",
+  "WizMetadata": {
+    "accountId": "001791986277",
+    "externalId": "europe-team-photos",
+    "nativeType": "bucket",
+    "objectFetchStatus": {
+      "GetObjectLockConfiguration": {
+        "apiCall": "GetObjectLockConfiguration",
+        "permission": "s3:GetObjectLockConfiguration",
+        "result": "Success"
+      },
+      "accountPublicAccessBlockConfiguration": {
+        "apiCall": "GetAccountPublicAccessBlock",
+        "permission": "s3:GetAccountPublicAccessBlock",
+        "result": "Success"
+      },
+      "bucketAccelerateConfiguration": {
+        "apiCall": "GetBucketAccelerateConfiguration",
+        "permission": "s3:GetBucketAccelerateConfiguration",
+        "result": "Success"
+      },
+      "bucketAcl": {
+        "apiCall": "GetBucketAcl",
+        "permission": "s3:GetBucketAcl",
+        "result": "Success"
+      },
+      "bucketCors": {
+        "apiCall": "GetBucketCors",
+        "permission": "s3:GetBucketCors",
+        "result": "Success"
+      },
+      "bucketEncryptionConfiguration": {
+        "apiCall": "GetEncryptionConfiguration",
+        "permission": "s3:GetEncryptionConfiguration",
+        "result": "Success"
+      },
+      "bucketLifecycleConfiguration": {
+        "apiCall": "GetLifecycleConfiguration",
+        "permission": "s3:GetLifecycleConfiguration",
+        "result": "Success"
+      },
+      "bucketLocation": {
+        "apiCall": "GetBucketLocation",
+        "permission": "s3:GetBucketLocation",
+        "result": "Success"
+      },
+      "bucketLogging": {
+        "apiCall": "GetBucketLogging",
+        "permission": "s3:GetBucketLogging",
+        "result": "Success"
+      },
+      "bucketNotificationConfiguration": {
+        "apiCall": "GetBucketNotificationConfiguration",
+        "permission": "s3:GetBucketNotification",
+        "result": "Success"
+      },
+      "bucketObjectLockConfiguration": {
+        "apiCall": "GetBucketObjectLockConfiguration",
+        "permission": "s3:GetBucketObjectLockConfiguration",
+        "result": "Success"
+      },
+      "bucketOwnershipControls": {
+        "apiCall": "GetBucketOwnershipControls",
+        "permission": "s3:GetBucketOwnershipControls",
+        "result": "Success"
+      },
+      "bucketPolicy": {
+        "apiCall": "GetBucketPolicy",
+        "permission": "s3:GetBucketPolicy",
+        "result": "Success"
+      },
+      "bucketPolicyStatus": {
+        "apiCall": "GetBucketPolicyStatus",
+        "permission": "s3:GetBucketPolicyStatus",
+        "result": "Success"
+      },
+      "bucketPublicAccessBlock": {
+        "apiCall": "GetBucketPublicAccessBlock",
+        "permission": "s3:GetBucketPublicAccessBlock",
+        "result": "Success"
+      },
+      "bucketReplication": {
+        "apiCall": "GetBucketReplication",
+        "permission": "s3:GetBucketReplication",
+        "result": "Success"
+      },
+      "bucketTags": {
+        "apiCall": "GetBucketTagging",
+        "permission": "s3:GetBucketTagging",
+        "result": "Success"
+      },
+      "bucketVersioning": {
+        "apiCall": "GetBucketVersioning",
+        "permission": "s3:GetBucketVersioning",
+        "result": "Success"
+      },
+      "bucketWebsite": {
+        "apiCall": "GetBucketWebsite",
+        "permission": "s3:GetBucketWebsite",
+        "result": "Success"
+      },
+      "intelligentTieringConfigurations": {
+        "apiCall": "ListBucketIntelligentTieringConfigurations",
+        "errorDetails": "Error fetching intelligent tiering configurations",
+        "errorType": "ErrorResultTypeMissingPermissionError",
+        "permission": "s3:GetIntelligentTieringConfiguration",
+        "result": "Error"
+      },
+      "inventoryConfigurations": {
+        "apiCall": "ListBucketInventoryConfigurations",
+        "permission": "s3:ListBucketInventoryConfigurations",
+        "result": "Success"
+      },
+      "metricsConfiguration": {
+        "apiCall": "ListBucketMetricsConfigurations",
+        "permission": "s3:GetMetricsConfiguration",
+        "result": "Success"
+      },
+      "requestPayment": {
+        "apiCall": "GetBucketRequestPayment",
+        "permission": "s3:GetBucketRequestPayment",
+        "result": "Success"
+      }
+    },
+    "region": "us-east-2"
+  },
+  "accountPublicAccessBlockConfiguration": null,
+  "bucketAccelerateConfiguration": {
+    "RequestCharged": "",
+    "ResultMetadata": {},
+    "Status": ""
+  },
+  "bucketAcl": {
+    "Grants": [
+      {
+        "Grantee": {
+          "DisplayName": null,
+          "EmailAddress": null,
+          "ID": "58ce10cf0dcca7c275a17c73c8e9a0f2b7d2e8f2c553fd31c88f291212a84779",
+          "Type": "CanonicalUser",
+          "URI": null
+        },
+        "Permission": "FULL_CONTROL"
+      },
+      {
+        "Grantee": {
+          "DisplayName": null,
+          "EmailAddress": null,
+          "ID": null,
+          "Type": "Group",
+          "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
+        },
+        "Permission": "READ"
+      },
+      {
+        "Grantee": {
+          "DisplayName": null,
+          "EmailAddress": null,
+          "ID": null,
+          "Type": "Group",
+          "URI": "http://acs.amazonaws.com/groups/global/AllUsers"
+        },
+        "Permission": "READ_ACP"
+      },
+      {
+        "Grantee": {
+          "DisplayName": null,
+          "EmailAddress": null,
+          "ID": null,
+          "Type": "Group",
+          "URI": "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"
+        },
+        "Permission": "READ"
+      },
+      {
+        "Grantee": {
+          "DisplayName": null,
+          "EmailAddress": null,
+          "ID": null,
+          "Type": "Group",
+          "URI": "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"
+        },
+        "Permission": "READ_ACP"
+      }
+    ],
+    "Owner": {
+      "DisplayName": null,
+      "ID": "58ce10cf0dcca7c275a17c73c8e9a0f2b7d2e8f2c553fd31c88f291212a84779"
+    },
+    "ResultMetadata": {}
+  },
+  "bucketCors": null,
+  "bucketEncryptionConfiguration": {
+    "ResultMetadata": {},
+    "ServerSideEncryptionConfiguration": {
+      "Rules": [
+        {
+          "ApplyServerSideEncryptionByDefault": {
+            "KMSMasterKeyID": null,
+            "SSEAlgorithm": "AES256"
+          },
+          "BlockedEncryptionTypes": null,
+          "BucketKeyEnabled": false
+        }
+      ]
+    }
+  },
+  "bucketLifecycleConfiguration": null,
+  "bucketLocation": {
+    "LocationConstraint": "us-east-2",
+    "ResultMetadata": {}
+  },
+  "bucketLogging": {
+    "LoggingEnabled": null,
+    "ResultMetadata": {}
+  },
+  "bucketNotificationConfiguration": {
+    "EventBridgeConfiguration": null,
+    "LambdaFunctionConfigurations": null,
+    "QueueConfigurations": null,
+    "ResultMetadata": {},
+    "TopicConfigurations": null
+  },
+  "bucketObjectLockConfiguration": null,
+  "bucketOwnershipControls": null,
+  "bucketPolicy": null,
+  "bucketPolicyStatus": null,
+  "bucketPublicAccessBlock": null,
+  "bucketReplication": null,
+  "bucketTags": [
+    {
+      "Key": "itayTest",
+      "Value": ""
+    }
+  ],
+  "bucketVersioning": {
+    "MFADelete": "",
+    "ResultMetadata": {},
+    "Status": ""
+  },
+  "bucketWebsite": null,
+  "intelligentTieringConfigurations": null,
+  "inventoryConfigurations": [
+    {
+      "destinationAccountID": "528757791420",
+      "destinationBucket": "arn:aws:s3:::wiz-ea6ad5c0-d60c-4255-accf-12b5c65fb944-us-east-2",
+      "destinationFormat": "CSV",
+      "destinationPrefix": "ef55b42d-0644-52a5-a65e-daf304195c2a/ea6ad5c0-d60c-4255-accf-12b5c65fb944",
+      "enabled": true,
+      "filterPrefix": null,
+      "id": "wiz-inventory-report-weekly",
+      "includedObjectVersions": "All",
+      "optionalFields": [
+        "Size",
+        "LastModifiedDate",
+        "StorageClass",
+        "ETag",
+        "IntelligentTieringAccessTier"
+      ],
+      "scheduleFrequency": "Weekly"
+    }
+  ],
+  "metricsConfiguration": null,
+  "requestPayment": {
+    "Payer": "BucketOwner",
+    "ResultMetadata": {}
+  }
+}

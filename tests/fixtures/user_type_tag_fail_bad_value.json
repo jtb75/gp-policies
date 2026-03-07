@@ -1,0 +1,20 @@
+{
+  "UserName": "badly-tagged-unknown-type",
+  "Arn": "arn:aws:iam::123456789012:user/badly-tagged-unknown-type",
+  "Tags": [
+    {
+      "Key": "type",
+      "Value": "unknown"
+    }
+  ],
+  "userCredentials": {
+    "AccessKey1Active": "false",
+    "AccessKey1LastRotated": "N/A",
+    "AccessKey2Active": "false",
+    "AccessKey2LastRotated": "N/A"
+  },
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

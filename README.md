@@ -25,7 +25,9 @@ gp-policies/
 │   ├── aws_snapshot_untrusted_sharing.rego  # EC2 snapshots shared with untrusted accounts
 │   └── aws_s3_bucket_untrusted_sharing.rego # S3 buckets shared with untrusted accounts
 ├── tests/
-│   ├── test_ccr.py                          # Test script for validating rules via Wiz API
+│   ├── test_ccr.py                          # Test a single rule against a fixture or live resources
+│   ├── validate_fixtures.py                 # Run all fixtures against their rules (full test suite)
+│   ├── fetch_fixtures.py                    # Fetch real resource JSONs from Wiz to use as fixtures
 │   └── fixtures/                            # Mock resource JSON files for controlled testing
 ├── .env                                     # Wiz credentials (gitignored)
 ├── .gitignore
@@ -116,17 +118,34 @@ python tests/test_ccr.py rego/aws_support_role_missing_type_tag.rego role \
   --input tests/fixtures/role_support_no_type_tag.json
 ```
 
-Store mock resource JSONs in `tests/fixtures/`. Name them descriptively to indicate the expected result:
+Each rule has fixtures for pass, fail, and skip (where applicable). Fixture names follow the pattern `<type>_<rule>_<outcome>.json`.
 
-```
-tests/fixtures/
-├── role_support_no_type_tag.json       # Expect: FAIL
-├── role_support_valid_type_tag.json    # Expect: PASS
-├── role_support_bad_type_tag.json      # Expect: FAIL
-└── role_not_support.json               # Expect: SKIP
+### Run the Full Test Suite
+
+Validate all fixtures against their rules in one command:
+
+```bash
+source .env
+python tests/validate_fixtures.py
 ```
 
-To create a new fixture, copy a resource's JSON from the Wiz CCR editor's Test Data pane.
+This runs all 41 fixture/rule combinations and reports pass/fail. When adding a new rule, add its test cases to `validate_fixtures.py` in the `TESTS` list.
+
+### Fetch Real Resource JSON for Fixtures
+
+Use the fixture fetcher to download real resource JSONs from the Wiz Graph API:
+
+```bash
+source .env
+
+# Fetch 3 role resources
+python tests/fetch_fixtures.py role --count 3
+
+# Fetch snapshot resources
+python tests/fetch_fixtures.py "ec2#unencryptedsnapshot" --count 2
+```
+
+This uses a two-step approach: `graphSearch` to find entity IDs, then `graphEntity` with `providerData` to get the raw cloud resource JSON. Downloaded fixtures can be modified to create pass/fail/skip variants.
 
 ### Test Against Live Resources
 

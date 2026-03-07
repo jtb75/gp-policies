@@ -1,0 +1,27 @@
+{
+  "Name": "example-bucket-public-acl",
+  "bucketPolicy": null,
+  "bucketAcl": {
+    "Grants": [
+      {
+        "Grantee": {
+          "ID": "owner-canonical-id",
+          "Type": "CanonicalUser"
+        },
+        "Permission": "FULL_CONTROL"
+      },
+      {
+        "Grantee": {
+          "URI": "http://acs.amazonaws.com/groups/global/AllUsers",
+          "Type": "Group"
+        },
+        "Permission": "READ"
+      }
+    ]
+  },
+  "inventoryConfigurations": [],
+  "WizMetadata": {
+    "nativeType": "bucket",
+    "accountId": "123456789012"
+  }
+}

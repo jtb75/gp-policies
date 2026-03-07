@@ -1,0 +1,20 @@
+{
+  "UserName": "svc-log-aggregator",
+  "Arn": "arn:aws:iam::123456789012:user/svc-log-aggregator",
+  "Tags": [
+    {
+      "Key": "type",
+      "Value": "service"
+    }
+  ],
+  "userCredentials": {
+    "AccessKey1Active": "true",
+    "AccessKey1LastRotated": "2026-01-01T00:00:00Z",
+    "AccessKey2Active": "false",
+    "AccessKey2LastRotated": "N/A"
+  },
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

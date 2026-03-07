@@ -1,0 +1,14 @@
+{
+  "SnapshotId": "snap-fail-untrusted",
+  "OwnerId": "123456789012",
+  "CreateVolumePermissions": [
+    {
+      "UserId": "999999999999"
+    }
+  ],
+  "Encrypted": true,
+  "WizMetadata": {
+    "nativeType": "ec2#encryptedsnapshot",
+    "accountId": "123456789012"
+  }
+}

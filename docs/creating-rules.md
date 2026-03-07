@@ -108,6 +108,12 @@ python tests/test_ccr.py rego/your_rule.rego <native_type> --input tests/fixture
 
 Create fixtures for each expected outcome (pass, fail, skip) to validate all code paths. This approach uses the `cloudConfigurationRuleJsonTest` API, which evaluates instantly — it does not require globals propagation.
 
+You can also fetch real resource JSONs to use as fixture starting points:
+
+```bash
+python tests/fetch_fixtures.py <native_type> --count 3
+```
+
 ### Option B: Test in the Wiz Portal
 
 1. Go to **Policies > Cloud Configuration Rules > Create Custom Rule**
@@ -125,7 +131,25 @@ python tests/test_ccr.py rego/your_rule.rego <native_type> --first 500
 
 **Important:** If your rule references the globals package and you recently changed it, allow up to 30 minutes for Wiz to propagate the updates before testing against live resources. Use Option A for instant feedback.
 
-## Step 5: Deploy
+## Step 5: Add Test Fixtures
+
+Create pass/fail/skip fixture files in `tests/fixtures/` and register them in `tests/validate_fixtures.py`:
+
+```python
+# In the TESTS list, add entries for your new rule:
+("your_fixture_pass.json", "rego/your_rule.rego", "native_type", "pass"),
+("your_fixture_fail.json", "rego/your_rule.rego", "native_type", "fail"),
+("your_fixture_skip.json", "rego/your_rule.rego", "native_type", "skip"),
+```
+
+Then verify all tests still pass:
+
+```bash
+source .env
+python tests/validate_fixtures.py
+```
+
+## Step 6: Deploy
 
 ```bash
 source .env

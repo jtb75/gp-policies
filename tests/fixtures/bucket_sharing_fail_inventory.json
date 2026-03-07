@@ -1,0 +1,25 @@
+{
+  "Name": "example-bucket-inventory",
+  "bucketPolicy": null,
+  "bucketAcl": {
+    "Grants": [
+      {
+        "Grantee": {
+          "ID": "owner-canonical-id",
+          "Type": "CanonicalUser"
+        },
+        "Permission": "FULL_CONTROL"
+      }
+    ]
+  },
+  "inventoryConfigurations": [
+    {
+      "Id": "inventory-config-1",
+      "destinationAccountID": "888888888888"
+    }
+  ],
+  "WizMetadata": {
+    "nativeType": "bucket",
+    "accountId": "123456789012"
+  }
+}

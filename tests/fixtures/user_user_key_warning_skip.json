@@ -1,0 +1,20 @@
+{
+  "UserName": "vendor-okta-sso",
+  "Arn": "arn:aws:iam::123456789012:user/vendor-okta-sso",
+  "Tags": [
+    {
+      "Key": "type",
+      "Value": "vendor"
+    }
+  ],
+  "userCredentials": {
+    "AccessKey1Active": "true",
+    "AccessKey1LastRotated": "2026-02-05T00:00:00Z",
+    "AccessKey2Active": "false",
+    "AccessKey2LastRotated": "N/A"
+  },
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

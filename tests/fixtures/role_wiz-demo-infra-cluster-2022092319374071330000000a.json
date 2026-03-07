@@ -1,0 +1,43 @@
+{
+  "Arn": "arn:aws:iam::984186218765:role/wiz-demo-infra-cluster-2022092319374071330000000a",
+  "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"EKSClusterAssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"eks.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+  "AttachedManagedPolicies": [
+    {
+      "PolicyArn": "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+      "PolicyName": "AmazonEKSClusterPolicy"
+    },
+    {
+      "PolicyArn": "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController",
+      "PolicyName": "AmazonEKSVPCResourceController"
+    },
+    {
+      "PolicyArn": "arn:aws:iam::984186218765:policy/wiz-demo-infra-cluster-ClusterEncryption20220923193804206100000011",
+      "PolicyName": "wiz-demo-infra-cluster-ClusterEncryption20220923193804206100000011"
+    }
+  ],
+  "CreateDate": "2022-09-23T19:37:40Z",
+  "Description": null,
+  "InstanceProfileList": [],
+  "MaxSessionDuration": 3600,
+  "Path": "/",
+  "PermissionsBoundary": null,
+  "RoleId": "AROA6KJQR5EGSMJF43FQX",
+  "RoleLastUsed": {
+    "LastUsedDate": "2026-03-07T13:35:07Z",
+    "Region": "us-east-2"
+  },
+  "RoleName": "wiz-demo-infra-cluster-2022092319374071330000000a",
+  "RolePolicyList": [
+    {
+      "PolicyDocument": "{\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\"],\"Effect\":\"Deny\",\"Resource\":\"*\"}],\"Version\":\"2012-10-17\"}",
+      "PolicyName": "wiz-demo-infra-cluster"
+    }
+  ],
+  "Tags": [],
+  "WizMetadata": {
+    "externalId": "arn:aws:iam::984186218765:role/wiz-demo-infra-cluster-2022092319374071330000000a",
+    "nativeType": "role",
+    "region": null
+  },
+  "fullFetchTime": "2026-03-06T15:22:16.763509951Z"
+}

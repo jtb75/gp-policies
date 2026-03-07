@@ -1,0 +1,20 @@
+{
+  "Name": "example-bucket-untrusted-policy",
+  "bucketPolicy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::999999999999:root\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::example-bucket-untrusted-policy/*\"}]}",
+  "bucketAcl": {
+    "Grants": [
+      {
+        "Grantee": {
+          "ID": "owner-canonical-id",
+          "Type": "CanonicalUser"
+        },
+        "Permission": "FULL_CONTROL"
+      }
+    ]
+  },
+  "inventoryConfigurations": [],
+  "WizMetadata": {
+    "nativeType": "bucket",
+    "accountId": "123456789012"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "Name": "example-bucket-pass",
+  "bucketPolicy": null,
+  "bucketAcl": {
+    "Grants": [
+      {
+        "Grantee": {
+          "ID": "owner-canonical-id",
+          "Type": "CanonicalUser"
+        },
+        "Permission": "FULL_CONTROL"
+      }
+    ]
+  },
+  "inventoryConfigurations": [],
+  "WizMetadata": {
+    "nativeType": "bucket",
+    "accountId": "123456789012"
+  }
+}
