@@ -6,76 +6,36 @@ This repository manages custom Wiz Cloud Configuration Rules (CCRs) using the Wi
 
 ```
 gp-policies/
-├── provider.tf                              # Wiz Terraform provider configuration
-├── rego_packages.tf                         # Custom Rego package definitions
-├── aws_*.tf                                 # Terraform resource definitions for each CCR
+├── provider.tf                    # Wiz Terraform provider configuration
+├── rego_packages.tf               # Custom Rego package definitions
+├── aws_*.tf                       # Terraform resource definitions for each CCR
 ├── rego/
 │   ├── packages/
-│   │   └── jtb75_globals.rego               # Shared variables (account lists, thresholds, role names)
-│   ├── aws_service_access_key_rotation.rego # Service account key rotation (90 days)
-│   ├── aws_service_access_key_rotation_warning.rego
-│   ├── aws_vendor_access_key_rotation.rego  # Vendor key rotation (60 days)
-│   ├── aws_vendor_access_key_rotation_warning.rego
-│   ├── aws_user_access_key_rotation.rego    # User key rotation (30 days)
-│   ├── aws_user_access_key_rotation_warning.rego
-│   ├── aws_untagged_access_key_rotation.rego # Catchall for untagged users (30 days)
-│   ├── aws_untagged_access_key_rotation_warning.rego
-│   ├── aws_missing_type_tag.rego            # IAM users missing valid type tag
-│   ├── aws_support_role_missing_type_tag.rego # Support roles missing valid type tag
-│   ├── aws_snapshot_untrusted_sharing.rego  # EC2 snapshots shared with untrusted accounts
-│   └── aws_s3_bucket_untrusted_sharing.rego # S3 buckets shared with untrusted accounts
+│   │   └── jtb75_globals.rego     # Shared variables (account lists, thresholds, role names)
+│   └── aws_*.rego                 # Rego policy files for each CCR
 ├── tests/
-│   ├── test_ccr.py                          # Test a single rule against a fixture or live resources
-│   ├── validate_fixtures.py                 # Run all fixtures against their rules (full test suite)
-│   ├── fetch_fixtures.py                    # Fetch real resource JSONs from Wiz to use as fixtures
-│   └── fixtures/                            # Mock resource JSON files for controlled testing
-├── .env                                     # Wiz credentials (gitignored)
+│   ├── test_ccr.py                # Test a single rule against a fixture or live resources
+│   ├── validate_fixtures.py       # Run all fixtures against their rules (full test suite)
+│   ├── fetch_fixtures.py          # Fetch real resource JSONs from Wiz Graph API
+│   └── fixtures/                  # Mock resource JSON files for controlled testing
+├── docs/
+│   ├── creating-rules.md          # Step-by-step guide for new CCRs
+│   └── rego-reference.md          # Rego language reference for Wiz CCRs
+├── RULES.md                       # Complete rules reference with fixtures
+├── .env                           # Wiz credentials (gitignored)
 ├── .gitignore
-└── .terraform.lock.hcl                      # Provider version lock
+└── .terraform.lock.hcl            # Provider version lock
 ```
 
 ## Current Rules
 
-### Access Key Rotation
+This repository manages 14 CCRs across three categories:
 
-Rules are applied based on the IAM user's `type` tag value. Each type has a hard-limit rule (HIGH severity) and an early-warning rule (INFORMATIONAL severity).
+- **Access Key Rotation** — 8 rules enforcing key age limits by account type (service/vendor/user/untagged), each with a hard limit and early warning
+- **Tag Enforcement** — 4 rules requiring valid `type` tags on IAM users and specific role lists (support/vendor/service)
+- **Untrusted Account Sharing** — 2 rules detecting EC2 snapshots and S3 buckets shared with accounts outside trusted lists
 
-| Type Tag Value | Hard Limit | Warning | Filter |
-|----------------|-----------|---------|--------|
-| `service` | 90 days | 85 days | Tag `type=service` |
-| `vendor` | 60 days | 55 days | Tag `type=vendor` |
-| `user` | 30 days | 25 days | Tag `type=user` |
-| Missing/unknown | 30 days | 25 days | No `type` tag or unrecognized value |
-
-All thresholds are centralized in `rego/packages/jtb75_globals.rego` and can be adjusted without modifying individual rules.
-
-### Tag Enforcement
-
-| Rule | Description |
-|------|-------------|
-| IAM users must have a valid type tag | Fails any IAM user missing a `type` tag or with an unrecognized value |
-| Support roles must have a valid type tag | Same check, but only for IAM roles matching names in `kbs_support_roles` |
-
-### Untrusted Account Sharing
-
-| Rule | Description |
-|------|-------------|
-| EC2 snapshots shared with untrusted accounts | Checks `CreateVolumePermissions` for accounts not in trusted lists |
-| S3 buckets shared with untrusted accounts | Checks bucket policy principals, ACL grants, and inventory destinations |
-
-Both rules reference `trusted_internal_accounts` and `trusted_external_accounts` from the globals package.
-
-## Shared Globals Package
-
-The `wiz_custom_rego_package` resource (`rego/packages/jtb75_globals.rego`) provides shared variables used across multiple rules:
-
-- **`trusted_internal_accounts`** - AWS accounts in your organization
-- **`trusted_external_accounts`** - Approved third-party AWS accounts
-- **`trusted_accounts`** - Union of both (for rules that don't need to distinguish)
-- **`service_key_max_age_days`** / **`service_key_warning_days`** - Service account thresholds
-- **`user_key_max_age_days`** / **`user_key_warning_days`** - Human user thresholds
-- **`vendor_key_max_age_days`** / **`vendor_key_warning_days`** - Vendor thresholds
-- **`kbs_support_roles`** - Known support role names for tag enforcement
+See [RULES.md](RULES.md) for the complete rules reference, including descriptions, globals dependencies, and test fixtures for each rule.
 
 ## Setup
 
@@ -129,7 +89,7 @@ source .env
 python tests/validate_fixtures.py
 ```
 
-This runs all 41 fixture/rule combinations and reports pass/fail. When adding a new rule, add its test cases to `validate_fixtures.py` in the `TESTS` list.
+This runs all 49 fixture/rule combinations and reports pass/fail. When adding a new rule, add its test cases to `validate_fixtures.py` in the `TESTS` list.
 
 ### Fetch Real Resource JSON for Fixtures
 
