@@ -1,0 +1,8 @@
+{
+  "RoleName": "SomeOtherRole",
+  "Arn": "arn:aws:iam::123456789012:role/SomeOtherRole",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

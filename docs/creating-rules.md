@@ -93,15 +93,37 @@ expectedConfiguration := "Description of the expected state"
 | `result = "skip"` | Return "skip" to exclude a resource from evaluation entirely |
 | `import data.customPackage.jtb75Globals as globals` | Import shared variables from the globals package |
 
-## Step 4: Test in the Wiz Portal
+## Step 4: Test Your Rule
 
-Before deploying via Terraform, you can test your Rego in the Wiz CCR editor:
+There are two ways to test before deploying. The test script (`tests/test_ccr.py`) is recommended since it provides a repeatable workflow.
+
+### Option A: Test with Mock JSON (Recommended)
+
+Create a JSON fixture in `tests/fixtures/` by copying a resource's JSON from the Wiz CCR editor's Test Data pane, then run:
+
+```bash
+source .env
+python tests/test_ccr.py rego/your_rule.rego <native_type> --input tests/fixtures/your_fixture.json
+```
+
+Create fixtures for each expected outcome (pass, fail, skip) to validate all code paths. This approach uses the `cloudConfigurationRuleJsonTest` API, which evaluates instantly — it does not require globals propagation.
+
+### Option B: Test in the Wiz Portal
 
 1. Go to **Policies > Cloud Configuration Rules > Create Custom Rule**
 2. Select your target native type
 3. Paste your Rego code in the Rule pane
 4. Use the Test Data pane to load real resources or paste custom JSON
 5. Click **Run Test** to verify pass/fail/skip behavior
+
+### Option C: Test Against Live Resources
+
+```bash
+source .env
+python tests/test_ccr.py rego/your_rule.rego <native_type> --first 500
+```
+
+**Important:** If your rule references the globals package and you recently changed it, allow up to 30 minutes for Wiz to propagate the updates before testing against live resources. Use Option A for instant feedback.
 
 ## Step 5: Deploy
 
@@ -132,7 +154,9 @@ threshold_ns := globals.service_key_max_age_days * 24 * 60 * 60 * 1000000000
 input.RoleName in globals.kbs_support_roles
 ```
 
-To add new shared variables, edit `rego/packages/jtb75_globals.rego`. Changes are deployed via the `wiz_custom_rego_package` resource in `rego_packages.tf`. Note that new packages take approximately 10 minutes to be recognized by Wiz before rules can reference them.
+To add new shared variables, edit `rego/packages/jtb75_globals.rego`. Changes are deployed via the `wiz_custom_rego_package` resource in `rego_packages.tf`.
+
+**Propagation delay:** After deploying changes to the globals package, Wiz can take up to 30 minutes to propagate the updates. During this window, rules tested against live resources (via the Wiz portal or `cloudConfigurationRuleTest` API) may not see the latest globals values. To test immediately, use the JSON test mode (`--input` flag) which always resolves globals correctly regardless of propagation state.
 
 ## Common Patterns
 

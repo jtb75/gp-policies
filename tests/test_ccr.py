@@ -11,6 +11,9 @@ Usage:
     # Optionally limit to specific cloud accounts
     python tests/test_ccr.py rego/aws_support_role_missing_type_tag.rego role --accounts 8b510f57-85d8-5ead-8139-f92ae718c88d
 
+    # Test against a local JSON fixture instead of live resources
+    python tests/test_ccr.py rego/aws_support_role_missing_type_tag.rego role --input tests/fixtures/role_support_no_type_tag.json
+
     # Limit the number of resources evaluated
     python tests/test_ccr.py rego/aws_missing_type_tag.rego user --first 100
 
@@ -68,6 +71,20 @@ QUERY = """
     }
 """
 
+QUERY_JSON = """
+    query RunCloudRegoRuleTestWithJson($rule: String!, $json: JSON!) {
+      cloudConfigurationRuleJsonTest(rule: $rule, json: $json) {
+        result
+        output
+        evidence {
+          current
+          expected
+          path
+        }
+      }
+    }
+"""
+
 
 def pad_base64(data):
     """Pad base64 string to a multiple of 4 characters."""
@@ -104,38 +121,94 @@ def get_token(client_id, client_secret):
     return token, payload["dc"]
 
 
-def run_test(token, dc, rule_code, native_types, cloud_account_ids=None, first=1000):
+def run_test(token, dc, rule_code, native_types, cloud_account_ids=None, first=1000, input_json=None):
     """Execute the CCR test query against the Wiz API."""
-    variables = {
-        "rule": rule_code,
-        "nativeTypes": native_types,
-        "first": first,
-    }
-    if cloud_account_ids:
-        variables["cloudAccountIds"] = cloud_account_ids
-
     HEADERS["Authorization"] = f"Bearer {token}"
+
+    if input_json:
+        variables = {
+            "rule": rule_code,
+            "json": input_json,
+        }
+        query = QUERY_JSON
+    else:
+        variables = {
+            "rule": rule_code,
+            "nativeTypes": native_types,
+            "first": first,
+        }
+        if cloud_account_ids:
+            variables["cloudAccountIds"] = cloud_account_ids
+        query = QUERY
 
     response = requests.post(
         url=f"https://api.{dc}.app.wiz.io/graphql",
-        json={"variables": variables, "query": QUERY},
+        json={"variables": variables, "query": query},
         headers=HEADERS,
         timeout=180,
     )
-    response.raise_for_status()
+    if not response.ok:
+        try:
+            error_body = response.json()
+        except Exception:
+            error_body = response.text
+        print(f"\nAPI Error ({response.status_code}):")
+        print(json.dumps(error_body, indent=2) if isinstance(error_body, dict) else error_body)
+        response.raise_for_status()
     return response.json()
 
 
+def color_result(result):
+    """Return ANSI-colored result string."""
+    if result == "FAIL":
+        return f"\033[31m{result}\033[0m"
+    elif result == "PASS":
+        return f"\033[32m{result}\033[0m"
+    return f"\033[33m{result}\033[0m"
+
+
+def print_errors(data):
+    """Print API errors if present. Returns True if errors were found."""
+    errors = data.get("errors", [])
+    if errors:
+        print("\nAPI Errors:")
+        for err in errors:
+            print(f"  - {err.get('message', err)}")
+        return True
+    return False
+
+
+def print_json_results(data):
+    """Print results from cloudConfigurationRuleJsonTest (single resource)."""
+    test = data.get("data", {}).get("cloudConfigurationRuleJsonTest")
+    if not test:
+        if not print_errors(data):
+            print("\nUnexpected response:")
+            print(json.dumps(data, indent=2))
+        return
+
+    result = test.get("result", "unknown").upper()
+    print(f"\nResult: [{color_result(result)}]")
+
+    evidence = test.get("evidence", {})
+    if evidence:
+        current = evidence.get("current")
+        expected = evidence.get("expected")
+        if current:
+            print(f"  Current:  {current}")
+        if expected:
+            print(f"  Expected: {expected}")
+
+    output = test.get("output")
+    if output:
+        print(f"  Output:   {output}")
+
+
 def print_results(data):
-    """Print a summary of the test results."""
+    """Print results from cloudConfigurationRuleTest (multiple resources)."""
     test = data.get("data", {}).get("cloudConfigurationRuleTest")
     if not test:
-        errors = data.get("errors", [])
-        if errors:
-            print("\nAPI Errors:")
-            for err in errors:
-                print(f"  - {err.get('message', err)}")
-        else:
+        if not print_errors(data):
             print("\nUnexpected response:")
             print(json.dumps(data, indent=2))
         return
@@ -149,15 +222,7 @@ def print_results(data):
         name = entity.get("name", "unknown")
         provider_id = entity.get("providerUniqueId", "")
 
-        # Color the result for readability
-        if result == "FAIL":
-            result_str = f"\033[31m{result}\033[0m"
-        elif result == "PASS":
-            result_str = f"\033[32m{result}\033[0m"
-        else:
-            result_str = f"\033[33m{result}\033[0m"
-
-        print(f"  [{result_str}] {name} ({provider_id})")
+        print(f"  [{color_result(result)}] {name} ({provider_id})")
 
         if evidence:
             current = evidence.get("current")
@@ -174,6 +239,7 @@ def main():
     parser.add_argument("native_type", help="Native type to evaluate (e.g., user, role, bucket)")
     parser.add_argument("--accounts", nargs="*", help="Cloud account IDs to scope the test")
     parser.add_argument("--first", type=int, default=1000, help="Max resources to evaluate (default: 1000)")
+    parser.add_argument("--input", dest="input_file", help="Path to a JSON file to use as the resource input")
     args = parser.parse_args()
 
     # Read credentials from environment
@@ -192,8 +258,20 @@ def main():
         print(f"Error: File not found: {args.rego_file}")
         sys.exit(1)
 
+    # Read the optional input JSON file
+    input_json = None
+    if args.input_file:
+        try:
+            with open(args.input_file, "r") as f:
+                input_json = json.load(f)
+        except FileNotFoundError:
+            print(f"Error: Input file not found: {args.input_file}")
+            sys.exit(1)
+
     print(f"Testing: {args.rego_file}")
     print(f"Native type: {args.native_type}")
+    if args.input_file:
+        print(f"Input: {args.input_file}")
     if args.accounts:
         print(f"Accounts: {', '.join(args.accounts)}")
 
@@ -202,7 +280,10 @@ def main():
     token, dc = get_token(client_id, client_secret)
 
     # Run the test
-    print(f"Running test against {args.first} resources...")
+    if input_json:
+        print("Running test against provided input JSON...")
+    else:
+        print(f"Running test against {args.first} resources...")
     result = run_test(
         token=token,
         dc=dc,
@@ -210,9 +291,13 @@ def main():
         native_types=[args.native_type],
         cloud_account_ids=args.accounts,
         first=args.first,
+        input_json=input_json,
     )
 
-    print_results(result)
+    if input_json:
+        print_json_results(result)
+    else:
+        print_results(result)
 
 
 if __name__ == "__main__":

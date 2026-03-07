@@ -1,0 +1,8 @@
+{
+  "RoleName": "Webserver-Role",
+  "Arn": "arn:aws:iam::123456789012:role/Webserver-Role",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

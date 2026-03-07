@@ -1,0 +1,10 @@
+{
+  "RoleName": "KBSSupportRole",
+  "Arn": "arn:aws:iam::123456789012:role/KBSSupportRole",
+  "Tags": [
+    { "Key": "type", "Value": "service" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

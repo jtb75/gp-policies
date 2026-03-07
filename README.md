@@ -24,6 +24,9 @@ gp-policies/
 │   ├── aws_support_role_missing_type_tag.rego # Support roles missing valid type tag
 │   ├── aws_snapshot_untrusted_sharing.rego  # EC2 snapshots shared with untrusted accounts
 │   └── aws_s3_bucket_untrusted_sharing.rego # S3 buckets shared with untrusted accounts
+├── tests/
+│   ├── test_ccr.py                          # Test script for validating rules via Wiz API
+│   └── fixtures/                            # Mock resource JSON files for controlled testing
 ├── .env                                     # Wiz credentials (gitignored)
 ├── .gitignore
 └── .terraform.lock.hcl                      # Provider version lock
@@ -96,6 +99,49 @@ terraform init
 terraform plan
 terraform apply
 ```
+
+## Testing Rules
+
+The test script (`tests/test_ccr.py`) validates rules using the Wiz GraphQL API. It supports two modes:
+
+### Test Against Mock JSON (Recommended for Development)
+
+Use `--input` to test a rule against a local JSON fixture. This uses the `cloudConfigurationRuleJsonTest` API endpoint, which evaluates instantly without waiting for globals propagation.
+
+```bash
+source .env
+
+# Test a rule against a specific fixture
+python tests/test_ccr.py rego/aws_support_role_missing_type_tag.rego role \
+  --input tests/fixtures/role_support_no_type_tag.json
+```
+
+Store mock resource JSONs in `tests/fixtures/`. Name them descriptively to indicate the expected result:
+
+```
+tests/fixtures/
+├── role_support_no_type_tag.json       # Expect: FAIL
+├── role_support_valid_type_tag.json    # Expect: PASS
+├── role_support_bad_type_tag.json      # Expect: FAIL
+└── role_not_support.json               # Expect: SKIP
+```
+
+To create a new fixture, copy a resource's JSON from the Wiz CCR editor's Test Data pane.
+
+### Test Against Live Resources
+
+Omit `--input` to evaluate the rule against real cloud resources:
+
+```bash
+# Test against up to 500 live resources
+python tests/test_ccr.py rego/aws_missing_type_tag.rego user --first 500
+
+# Scope to specific accounts
+python tests/test_ccr.py rego/aws_snapshot_untrusted_sharing.rego ec2#unencryptedsnapshot \
+  --accounts <account-uuid>
+```
+
+**Note:** After deploying changes to the globals package via Terraform, allow up to 30 minutes for Wiz to propagate the updates before testing against live resources. The JSON test mode (`--input`) is not affected by this delay.
 
 ## Adding a New Rule
 
