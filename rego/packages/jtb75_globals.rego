@@ -31,3 +31,12 @@ user_key_max_age_days := 30
 user_key_warning_days := 25
 vendor_key_max_age_days := 60
 vendor_key_warning_days := 55
+
+# Known support role names.
+# Used to identify roles that should have a valid "type" tag.
+# Role names are matched case-sensitively against this set.
+kbs_support_roles := {
+    "KBSSupportRole",
+    "KBSSupportAdmin",
+    "KBSSupportReadOnly",
+}
