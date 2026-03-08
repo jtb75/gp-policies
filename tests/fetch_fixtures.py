@@ -35,6 +35,7 @@ NATIVE_TYPE_TO_ENTITY = {
     "bucket": ["BUCKET"],
     "ec2#encryptedsnapshot": ["SNAPSHOT"],
     "ec2#unencryptedsnapshot": ["SNAPSHOT"],
+    "rootUser": ["USER_ACCOUNT"],
     "resourcePolicy": ["RESOURCE"],
 }
 

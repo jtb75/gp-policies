@@ -90,6 +90,10 @@ TESTS = [
     ("snapshot_sharing_fail_public.json", "rego/aws_snapshot_untrusted_sharing.rego", "ec2#unencryptedsnapshot", "fail"),
     ("snapshot_sharing_fail_untrusted.json", "rego/aws_snapshot_untrusted_sharing.rego", "ec2#encryptedsnapshot", "fail"),
     ("snapshot_sharing_pass_trusted.json", "rego/aws_snapshot_untrusted_sharing.rego", "ec2#encryptedsnapshot", "pass"),
+    # Root account usage
+    ("rootuser_pass.json", "rego/aws_root_account_usage.rego", "rootUser", "pass"),
+    ("rootuser_fail.json", "rego/aws_root_account_usage.rego", "rootUser", "fail"),
+    ("rootuser_skip.json", "rego/aws_root_account_usage.rego", "rootUser", "skip"),
     # S3 bucket untrusted sharing
     ("bucket_sharing_pass.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
     ("bucket_sharing_fail_public_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),

@@ -310,6 +310,28 @@ The bucket's own account (from `WizMetadata.accountId`) is always considered tru
 | `bucket_sharing_fail_public_acl.json` | FAIL — ACL grants AllUsers access |
 | `bucket_sharing_fail_inventory.json` | FAIL — inventory destination is untrusted |
 
+## Root Account Usage
+
+### Root Account Used in the Last Day
+
+| | |
+|---|---|
+| **Terraform** | `aws_root_account_usage.tf` |
+| **Rego** | `rego/aws_root_account_usage.rego` |
+| **Native Type** | `rootUser` |
+| **Severity** | HIGH |
+| **Globals** | `account_min_age_days`, `root_usage_lookback_days` |
+
+Fails if an AWS root account has been used (password login or access key) within the lookback window (default 1 day). Accounts younger than the minimum age threshold (default 15 days) are skipped to allow the cloud platform team time to set up automation.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `rootuser_pass.json` | PASS — old account, root not used recently |
+| `rootuser_fail.json` | FAIL — old account, root used today |
+| `rootuser_skip.json` | SKIP — account younger than 15 days |
+
 ## Shared Globals Package
 
 The `wiz_custom_rego_package` resource (`rego/packages/jtb75_globals.rego`) provides shared variables used across multiple rules:
@@ -325,3 +347,5 @@ The `wiz_custom_rego_package` resource (`rego/packages/jtb75_globals.rego`) prov
 | `kbs_support_roles` | Support role tag enforcement |
 | `kbs_vendor_roles` | Vendor role tag enforcement |
 | `kbs_service_roles` | Service role tag enforcement |
+| `account_min_age_days` | Root account usage (skip threshold) |
+| `root_usage_lookback_days` | Root account usage (alert window) |

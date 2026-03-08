@@ -32,6 +32,12 @@ user_key_warning_days := 25
 vendor_key_max_age_days := 60
 vendor_key_warning_days := 55
 
+# Root account usage detection thresholds.
+# account_min_age_days: skip accounts younger than this (allows setup time)
+# root_usage_lookback_days: alert if root was used within this many days
+account_min_age_days := 15
+root_usage_lookback_days := 1
+
 # Known support role names.
 # Used to identify roles that should have a valid "type" tag.
 # Role names are matched case-sensitively against this set.
