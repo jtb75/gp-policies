@@ -1,0 +1,11 @@
+{
+  "Arn": "arn:aws:iam::123456789012:role/EKSClusterRole",
+  "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"eks.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+  "RoleName": "EKSClusterRole",
+  "Tags": [],
+  "WizMetadata": {
+    "externalId": "arn:aws:iam::123456789012:role/EKSClusterRole",
+    "nativeType": "role",
+    "region": null
+  }
+}

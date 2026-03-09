@@ -1,0 +1,11 @@
+{
+  "Arn": "arn:aws:iam::123456789012:role/CrossAccountUntrustedRole",
+  "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::999888777666:root\"},\"Action\":\"sts:AssumeRole\"}]}",
+  "RoleName": "CrossAccountUntrustedRole",
+  "Tags": [],
+  "WizMetadata": {
+    "externalId": "arn:aws:iam::123456789012:role/CrossAccountUntrustedRole",
+    "nativeType": "role",
+    "region": null
+  }
+}

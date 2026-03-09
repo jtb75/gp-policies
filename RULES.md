@@ -352,6 +352,27 @@ The bucket's own account (from `WizMetadata.accountId`) is always considered tru
 | `bucket_sharing_fail_public_acl.json` | FAIL — ACL grants AllUsers access |
 | `bucket_sharing_fail_inventory.json` | FAIL — inventory destination is untrusted |
 
+### IAM Roles with Untrusted Account Trust Relationships
+
+| | |
+|---|---|
+| **Terraform** | `aws_role_untrusted_trust.tf` |
+| **Rego** | `rego/aws_role_untrusted_trust.rego` |
+| **Native Type** | `role` |
+| **Severity** | HIGH |
+| **Globals** | `trusted_internal_accounts`, `trusted_external_accounts` |
+
+Fails if an IAM role's trust policy (`AssumeRolePolicyDocument`) allows assumption by `"*"` (any AWS account) or by an account not in either trusted list. Skips roles that only trust AWS services or federated providers (no cross-account AWS principals).
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `role_trust_pass.json` | PASS — trusts account in trusted internal list |
+| `role_trust_fail_untrusted.json` | FAIL — trusts account not in any trusted list |
+| `role_trust_fail_public.json` | FAIL — trusts `"*"` (any AWS account) |
+| `role_trust_skip.json` | SKIP — only trusts AWS service (no cross-account) |
+
 ## Root Account Usage
 
 ### Root Account Used in the Last Day

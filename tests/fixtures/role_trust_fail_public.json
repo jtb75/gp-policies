@@ -1,0 +1,11 @@
+{
+  "Arn": "arn:aws:iam::123456789012:role/PubliclyAssumableRole",
+  "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":\"sts:AssumeRole\"}]}",
+  "RoleName": "PubliclyAssumableRole",
+  "Tags": [],
+  "WizMetadata": {
+    "externalId": "arn:aws:iam::123456789012:role/PubliclyAssumableRole",
+    "nativeType": "role",
+    "region": null
+  }
+}

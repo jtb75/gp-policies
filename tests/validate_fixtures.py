@@ -127,6 +127,11 @@ TESTS = [
     ("bucket_sharing_fail_public_acl.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_fail_inventory.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_pass_trusted_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
+    # IAM role untrusted trust
+    ("role_trust_pass.json", "rego/aws_role_untrusted_trust.rego", "role", "pass"),
+    ("role_trust_fail_untrusted.json", "rego/aws_role_untrusted_trust.rego", "role", "fail"),
+    ("role_trust_fail_public.json", "rego/aws_role_untrusted_trust.rego", "role", "fail"),
+    ("role_trust_skip.json", "rego/aws_role_untrusted_trust.rego", "role", "skip"),
     # API Gateway no authorization
     ("apigateway_no_auth_fail.json", "rego/aws_apigateway_no_authorization.rego", "apiGateway", "fail"),
     ("apigateway_no_auth_pass.json", "rego/aws_apigateway_no_authorization.rego", "apiGateway", "pass"),
