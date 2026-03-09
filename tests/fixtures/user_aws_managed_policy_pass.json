@@ -1,0 +1,17 @@
+{
+  "UserName": "svc-scoped-access",
+  "Arn": "arn:aws:iam::123456789012:user/svc-scoped-access",
+  "AttachedManagedPolicies": [
+    {
+      "PolicyArn": "arn:aws:iam::123456789012:policy/custom-s3-read-only",
+      "PolicyName": "custom-s3-read-only"
+    }
+  ],
+  "Tags": [
+    { "Key": "type", "Value": "service" }
+  ],
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "UserName": "dev-user-broad-access",
+  "Arn": "arn:aws:iam::123456789012:user/dev-user-broad-access",
+  "AttachedManagedPolicies": [
+    {
+      "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+      "PolicyName": "AmazonS3FullAccess"
+    },
+    {
+      "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+      "PolicyName": "AmazonEC2ReadOnlyAccess"
+    }
+  ],
+  "Tags": [
+    { "Key": "type", "Value": "user" }
+  ],
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

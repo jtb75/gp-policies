@@ -480,6 +480,28 @@ Fails if a KMS key's scheduled automatic rotation (`NextRotationDate`) is within
 | `kms_rotation_fail.json` | FAIL — rotation scheduled within 5 days |
 | `kms_rotation_skip.json` | SKIP — rotation not enabled |
 
+## IAM Policy Hygiene
+
+### IAM Users with AWS Managed Policies
+
+| | |
+|---|---|
+| **Terraform** | `aws_user_aws_managed_policy.tf` |
+| **Rego** | `rego/aws_user_aws_managed_policy.rego` |
+| **Native Type** | `user` |
+| **Severity** | HIGH |
+| **Globals** | None |
+
+Fails if an IAM user has any AWS-managed policy attached (ARN containing `:aws:policy/`). AWS managed policies are overly permissive; users should have customer-managed policies scoped to their specific needs. Passes if only customer-managed policies or no managed policies are attached.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `user_aws_managed_policy_pass.json` | PASS — only customer-managed policy attached |
+| `user_aws_managed_policy_pass_none.json` | PASS — no managed policies attached |
+| `user_aws_managed_policy_fail.json` | FAIL — AWS managed policies attached |
+
 ## API Gateway Security
 
 ### API Gateway Methods Without Authorization

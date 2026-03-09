@@ -1,0 +1,12 @@
+{
+  "UserName": "svc-inline-only",
+  "Arn": "arn:aws:iam::123456789012:user/svc-inline-only",
+  "AttachedManagedPolicies": [],
+  "Tags": [
+    { "Key": "type", "Value": "service" }
+  ],
+  "WizMetadata": {
+    "nativeType": "user",
+    "accountId": "123456789012"
+  }
+}

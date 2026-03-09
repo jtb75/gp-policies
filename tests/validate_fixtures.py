@@ -127,6 +127,10 @@ TESTS = [
     ("bucket_sharing_fail_public_acl.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_fail_inventory.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_pass_trusted_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
+    # IAM user AWS managed policy
+    ("user_aws_managed_policy_fail.json", "rego/aws_user_aws_managed_policy.rego", "user", "fail"),
+    ("user_aws_managed_policy_pass.json", "rego/aws_user_aws_managed_policy.rego", "user", "pass"),
+    ("user_aws_managed_policy_pass_none.json", "rego/aws_user_aws_managed_policy.rego", "user", "pass"),
     # IAM role untrusted trust
     ("role_trust_pass.json", "rego/aws_role_untrusted_trust.rego", "role", "pass"),
     ("role_trust_fail_untrusted.json", "rego/aws_role_untrusted_trust.rego", "role", "fail"),
