@@ -1,0 +1,19 @@
+{
+  "Arn": "arn:aws:kms:us-east-2:123456789012:key/abcd1234-5678-90ab-cdef-1234567890ab",
+  "KeyId": "abcd1234-5678-90ab-cdef-1234567890ab",
+  "KeyState": "Enabled",
+  "KeyManager": "CUSTOMER",
+  "Origin": "AWS_KMS",
+  "ValidTo": null,
+  "keyRotationStatus": {
+    "KeyId": "arn:aws:kms:us-east-2:123456789012:key/abcd1234-5678-90ab-cdef-1234567890ab",
+    "KeyRotationEnabled": true,
+    "NextRotationDate": "2099-01-01T00:00:00Z",
+    "RotationPeriodInDays": 365
+  },
+  "WizMetadata": {
+    "externalId": "arn:aws:kms:us-east-2:123456789012:key/abcd1234-5678-90ab-cdef-1234567890ab",
+    "nativeType": "encryptionKey",
+    "region": "us-east-2"
+  }
+}
