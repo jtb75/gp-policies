@@ -1,0 +1,16 @@
+{
+  "ImageId": "ami-0123456789abcdef0",
+  "Name": "myapp-base-2026-03",
+  "OwnerId": "123456789012",
+  "Public": false,
+  "LaunchPermissions": null,
+  "State": "available",
+  "Tags": [
+    { "Key": "Name", "Value": "myapp-base" }
+  ],
+  "WizMetadata": {
+    "externalId": "ami-0123456789abcdef0",
+    "nativeType": "ami",
+    "region": "us-east-2"
+  }
+}

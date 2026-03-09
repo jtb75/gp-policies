@@ -282,6 +282,27 @@ Fails if a snapshot's `CreateVolumePermissions` includes a public group (`"all"`
 | `snapshot_sharing_fail_public.json` | FAIL — shared publicly (Group: "all") |
 | `snapshot_sharing_fail_untrusted.json` | FAIL — shared with untrusted account |
 
+### EC2 AMIs Shared with Untrusted Accounts
+
+| | |
+|---|---|
+| **Terraform** | `aws_ami_untrusted_sharing.tf` |
+| **Rego** | `rego/aws_ami_untrusted_sharing.rego` |
+| **Native Type** | `ami` |
+| **Severity** | HIGH |
+| **Globals** | `trusted_internal_accounts`, `trusted_external_accounts` |
+
+Fails if an AMI is public (`Public: true` or `LaunchPermissions` contains `Group: "all"`) or shared with an account not in either trusted list. No skip condition — all AMIs are evaluated.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `ami_sharing_pass.json` | PASS — private, no LaunchPermissions |
+| `ami_sharing_pass_trusted.json` | PASS — shared with trusted external account |
+| `ami_sharing_fail_public.json` | FAIL — public AMI |
+| `ami_sharing_fail_untrusted.json` | FAIL — shared with untrusted account |
+
 ### RDS Snapshots Shared with Untrusted Accounts
 
 | | |

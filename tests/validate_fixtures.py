@@ -94,6 +94,11 @@ TESTS = [
     ("rootuser_pass.json", "rego/aws_root_account_usage.rego", "rootUser", "pass"),
     ("rootuser_fail.json", "rego/aws_root_account_usage.rego", "rootUser", "fail"),
     ("rootuser_skip.json", "rego/aws_root_account_usage.rego", "rootUser", "skip"),
+    # AMI untrusted sharing
+    ("ami_sharing_pass.json", "rego/aws_ami_untrusted_sharing.rego", "ami", "pass"),
+    ("ami_sharing_pass_trusted.json", "rego/aws_ami_untrusted_sharing.rego", "ami", "pass"),
+    ("ami_sharing_fail_public.json", "rego/aws_ami_untrusted_sharing.rego", "ami", "fail"),
+    ("ami_sharing_fail_untrusted.json", "rego/aws_ami_untrusted_sharing.rego", "ami", "fail"),
     # RDS snapshot untrusted sharing
     ("rds_snapshot_sharing_pass.json", "rego/aws_rds_snapshot_untrusted_sharing.rego", "rds#snapshot", "pass"),
     ("rds_snapshot_sharing_pass_trusted.json", "rego/aws_rds_snapshot_untrusted_sharing.rego", "rds#snapshot", "pass"),
