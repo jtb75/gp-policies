@@ -38,6 +38,7 @@ NATIVE_TYPE_TO_ENTITY = {
     "rootUser": ["USER_ACCOUNT"],
     "kms#instance": ["ACCESS_KEY"],
     "encryptionKey": ["ACCESS_KEY"],
+    "apiGateway": ["API_GATEWAY"],
     "resourcePolicy": ["RESOURCE"],
 }
 

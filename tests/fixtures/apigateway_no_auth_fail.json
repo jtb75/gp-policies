@@ -1,0 +1,44 @@
+{
+  "Id": "abc123def4",
+  "Name": "open-api",
+  "ApiKeySource": "HEADER",
+  "Authorizers": [],
+  "Tags": null,
+  "EndpointConfiguration": {
+    "Types": ["REGIONAL"]
+  },
+  "Resources": [
+    {
+      "Id": "root123",
+      "Path": "/",
+      "ResourceMethods": {
+        "GET": {
+          "ApiKeyRequired": false,
+          "AuthorizationType": "NONE",
+          "AuthorizerId": null,
+          "HttpMethod": "GET",
+          "MethodIntegration": null,
+          "MethodResponses": {}
+        }
+      }
+    },
+    {
+      "Id": "res456",
+      "Path": "/data",
+      "ResourceMethods": {
+        "POST": {
+          "ApiKeyRequired": false,
+          "AuthorizationType": "NONE",
+          "AuthorizerId": null,
+          "HttpMethod": "POST",
+          "MethodIntegration": null,
+          "MethodResponses": {}
+        }
+      }
+    }
+  ],
+  "WizMetadata": {
+    "nativeType": "apiGateway",
+    "region": "us-east-1"
+  }
+}

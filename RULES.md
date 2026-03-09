@@ -459,6 +459,28 @@ Fails if a KMS key's scheduled automatic rotation (`NextRotationDate`) is within
 | `kms_rotation_fail.json` | FAIL — rotation scheduled within 5 days |
 | `kms_rotation_skip.json` | SKIP — rotation not enabled |
 
+## API Gateway Security
+
+### API Gateway Methods Without Authorization
+
+| | |
+|---|---|
+| **Terraform** | `aws_apigateway_no_authorization.tf` |
+| **Rego** | `rego/aws_apigateway_no_authorization.rego` |
+| **Native Type** | `apiGateway` |
+| **Severity** | HIGH |
+| **Globals** | None |
+
+Fails if any method on any resource in the API Gateway has `AuthorizationType` set to `NONE`, meaning it accepts unauthenticated requests. Skips APIs tagged with `authentication:kochid`, indicating authentication is handled externally via KochID.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `apigateway_no_auth_pass.json` | PASS — all methods have authorization configured |
+| `apigateway_no_auth_fail.json` | FAIL — methods with AuthorizationType NONE |
+| `apigateway_no_auth_skip.json` | SKIP — has authentication:kochid exemption tag |
+
 ## Shared Globals Package
 
 The `wiz_custom_rego_package` resource (`rego/packages/jtb75_globals.rego`) provides shared variables used across multiple rules:

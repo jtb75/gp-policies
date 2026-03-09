@@ -1,0 +1,50 @@
+{
+  "Id": "xyz789ghi0",
+  "Name": "secured-api",
+  "ApiKeySource": "HEADER",
+  "Authorizers": [
+    {
+      "Id": "auth001",
+      "Name": "cognito-authorizer",
+      "Type": "COGNITO_USER_POOLS"
+    }
+  ],
+  "Tags": null,
+  "EndpointConfiguration": {
+    "Types": ["REGIONAL"]
+  },
+  "Resources": [
+    {
+      "Id": "root123",
+      "Path": "/",
+      "ResourceMethods": {
+        "GET": {
+          "ApiKeyRequired": true,
+          "AuthorizationType": "COGNITO_USER_POOLS",
+          "AuthorizerId": "auth001",
+          "HttpMethod": "GET",
+          "MethodIntegration": null,
+          "MethodResponses": {}
+        }
+      }
+    },
+    {
+      "Id": "res456",
+      "Path": "/submit",
+      "ResourceMethods": {
+        "POST": {
+          "ApiKeyRequired": false,
+          "AuthorizationType": "AWS_IAM",
+          "AuthorizerId": null,
+          "HttpMethod": "POST",
+          "MethodIntegration": null,
+          "MethodResponses": {}
+        }
+      }
+    }
+  ],
+  "WizMetadata": {
+    "nativeType": "apiGateway",
+    "region": "us-east-1"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "Id": "skip456abc",
+  "Name": "kochid-exempt-api",
+  "ApiKeySource": "HEADER",
+  "Authorizers": [],
+  "Tags": {
+    "authentication": "kochid",
+    "team": "platform"
+  },
+  "EndpointConfiguration": {
+    "Types": ["REGIONAL"]
+  },
+  "Resources": [
+    {
+      "Id": "root123",
+      "Path": "/",
+      "ResourceMethods": {
+        "GET": {
+          "ApiKeyRequired": false,
+          "AuthorizationType": "NONE",
+          "AuthorizerId": null,
+          "HttpMethod": "GET",
+          "MethodIntegration": null,
+          "MethodResponses": {}
+        }
+      }
+    }
+  ],
+  "WizMetadata": {
+    "nativeType": "apiGateway",
+    "region": "us-east-1"
+  }
+}
