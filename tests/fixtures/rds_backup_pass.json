@@ -1,0 +1,14 @@
+{
+  "DBInstanceIdentifier": "myapp-db-prod",
+  "DBInstanceArn": "arn:aws:rds:us-east-2:123456789012:db:myapp-db-prod",
+  "Engine": "postgres",
+  "EngineVersion": "16.10",
+  "BackupRetentionPeriod": 35,
+  "ReadReplicaSourceDBInstanceIdentifier": null,
+  "DBInstanceStatus": "available",
+  "WizMetadata": {
+    "externalId": "arn:aws:rds:us-east-2:123456789012:db:myapp-db-prod",
+    "nativeType": "rds/PostgreSQL/instance",
+    "region": "us-east-2"
+  }
+}

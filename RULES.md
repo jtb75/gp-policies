@@ -374,6 +374,70 @@ Fails if an AWS root account has been used (password login or access key) within
 | `rootuser_fail.json` | FAIL — old account, root used today |
 | `rootuser_skip.json` | SKIP — account younger than 15 days |
 
+## Database Configuration
+
+### RDS Backup Retention Period
+
+| | |
+|---|---|
+| **Terraform** | `aws_rds_backup_retention.tf` |
+| **Rego** | `rego/aws_rds_backup_retention.rego` |
+| **Native Types** | All RDS instance types (Aurora, PostgreSQL, MySQL, MariaDB, MSSQL, Oracle, Neptune, DocDB) |
+| **Severity** | HIGH |
+| **Globals** | `rds_backup_retention_days` |
+
+Fails if an RDS database instance has a `BackupRetentionPeriod` below the required threshold (default 35 days, per GP DBA team standards). Read replicas are skipped.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `rds_backup_pass.json` | PASS — 35-day retention period |
+| `rds_backup_fail.json` | FAIL — 7-day retention period |
+| `rds_backup_skip.json` | SKIP — read replica |
+
+## KMS Key Management
+
+### KMS Imported Key Material Expiring Soon
+
+| | |
+|---|---|
+| **Terraform** | `aws_kms_key_expiration.tf` |
+| **Rego** | `rego/aws_kms_key_expiration.rego` |
+| **Native Type** | `encryptionKey` |
+| **Severity** | HIGH |
+| **Globals** | `kms_expiration_warning_days` |
+
+Fails if a KMS key with imported key material (`Origin: "EXTERNAL"`) has a `ValidTo` date within the warning threshold (default 5 days). Skips AWS-generated keys (no expiration) and disabled keys.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `kms_expiration_pass.json` | PASS — imported key, expires far in the future |
+| `kms_expiration_fail.json` | FAIL — imported key, expires within 5 days |
+| `kms_expiration_skip.json` | SKIP — AWS-generated key (ValidTo is null) |
+
+### KMS Key Rotation Approaching
+
+| | |
+|---|---|
+| **Terraform** | `aws_kms_key_rotation_warning.tf` |
+| **Rego** | `rego/aws_kms_key_rotation_warning.rego` |
+| **Native Type** | `encryptionKey` |
+| **Severity** | INFORMATIONAL |
+| **Globals** | `kms_rotation_warning_days` |
+
+Fails if a KMS key's scheduled automatic rotation (`NextRotationDate`) is within the warning threshold (default 5 days). Skips keys without rotation enabled.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `kms_rotation_pass.json` | PASS — rotation scheduled far in the future |
+| `kms_rotation_fail.json` | FAIL — rotation scheduled within 5 days |
+| `kms_rotation_skip.json` | SKIP — rotation not enabled |
+
 ## Shared Globals Package
 
 The `wiz_custom_rego_package` resource (`rego/packages/jtb75_globals.rego`) provides shared variables used across multiple rules:
@@ -391,3 +455,6 @@ The `wiz_custom_rego_package` resource (`rego/packages/jtb75_globals.rego`) prov
 | `kbs_service_roles` | Service role tag enforcement |
 | `account_min_age_days` | Root account usage (skip threshold) |
 | `root_usage_lookback_days` | Root account usage (alert window) |
+| `rds_backup_retention_days` | RDS backup retention |
+| `kms_expiration_warning_days` | KMS key expiration warning |
+| `kms_rotation_warning_days` | KMS key rotation warning |

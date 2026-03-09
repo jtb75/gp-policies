@@ -94,6 +94,18 @@ TESTS = [
     ("rootuser_pass.json", "rego/aws_root_account_usage.rego", "rootUser", "pass"),
     ("rootuser_fail.json", "rego/aws_root_account_usage.rego", "rootUser", "fail"),
     ("rootuser_skip.json", "rego/aws_root_account_usage.rego", "rootUser", "skip"),
+    # RDS backup retention
+    ("rds_backup_pass.json", "rego/aws_rds_backup_retention.rego", "rds/PostgreSQL/instance", "pass"),
+    ("rds_backup_fail.json", "rego/aws_rds_backup_retention.rego", "rds/PostgreSQL/instance", "fail"),
+    ("rds_backup_skip.json", "rego/aws_rds_backup_retention.rego", "rds/PostgreSQL/instance", "skip"),
+    # KMS key expiration
+    ("kms_expiration_pass.json", "rego/aws_kms_key_expiration.rego", "encryptionKey", "pass"),
+    ("kms_expiration_fail.json", "rego/aws_kms_key_expiration.rego", "encryptionKey", "fail"),
+    ("kms_expiration_skip.json", "rego/aws_kms_key_expiration.rego", "encryptionKey", "skip"),
+    # KMS key rotation warning
+    ("kms_rotation_pass.json", "rego/aws_kms_key_rotation_warning.rego", "encryptionKey", "pass"),
+    ("kms_rotation_fail.json", "rego/aws_kms_key_rotation_warning.rego", "encryptionKey", "fail"),
+    ("kms_rotation_skip.json", "rego/aws_kms_key_rotation_warning.rego", "encryptionKey", "skip"),
     # AMI untrusted sharing
     ("ami_sharing_pass.json", "rego/aws_ami_untrusted_sharing.rego", "ami", "pass"),
     ("ami_sharing_pass_trusted.json", "rego/aws_ami_untrusted_sharing.rego", "ami", "pass"),

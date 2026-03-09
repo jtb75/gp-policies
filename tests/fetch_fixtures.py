@@ -36,6 +36,8 @@ NATIVE_TYPE_TO_ENTITY = {
     "ec2#encryptedsnapshot": ["SNAPSHOT"],
     "ec2#unencryptedsnapshot": ["SNAPSHOT"],
     "rootUser": ["USER_ACCOUNT"],
+    "kms#instance": ["ACCESS_KEY"],
+    "encryptionKey": ["ACCESS_KEY"],
     "resourcePolicy": ["RESOURCE"],
 }
 

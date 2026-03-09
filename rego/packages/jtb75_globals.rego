@@ -38,6 +38,13 @@ vendor_key_warning_days := 55
 account_min_age_days := 15
 root_usage_lookback_days := 1
 
+# Minimum RDS backup retention period in days.
+rds_backup_retention_days := 35
+
+# KMS key expiration and rotation warning thresholds in days.
+kms_expiration_warning_days := 5
+kms_rotation_warning_days := 5
+
 # Known support role names.
 # Used to identify roles that should have a valid "type" tag.
 # Role names are matched case-sensitively against this set.
