@@ -94,6 +94,11 @@ TESTS = [
     ("rootuser_pass.json", "rego/aws_root_account_usage.rego", "rootUser", "pass"),
     ("rootuser_fail.json", "rego/aws_root_account_usage.rego", "rootUser", "fail"),
     ("rootuser_skip.json", "rego/aws_root_account_usage.rego", "rootUser", "skip"),
+    # RDS snapshot untrusted sharing
+    ("rds_snapshot_sharing_pass.json", "rego/aws_rds_snapshot_untrusted_sharing.rego", "rds#snapshot", "pass"),
+    ("rds_snapshot_sharing_pass_trusted.json", "rego/aws_rds_snapshot_untrusted_sharing.rego", "rds#snapshot", "pass"),
+    ("rds_snapshot_sharing_fail_public.json", "rego/aws_rds_snapshot_untrusted_sharing.rego", "rds#snapshot", "fail"),
+    ("rds_snapshot_sharing_fail_untrusted.json", "rego/aws_rds_snapshot_untrusted_sharing.rego", "rds#snapshot", "fail"),
     # S3 bucket untrusted sharing
     ("bucket_sharing_pass.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
     ("bucket_sharing_fail_public_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),

@@ -282,6 +282,27 @@ Fails if a snapshot's `CreateVolumePermissions` includes a public group (`"all"`
 | `snapshot_sharing_fail_public.json` | FAIL — shared publicly (Group: "all") |
 | `snapshot_sharing_fail_untrusted.json` | FAIL — shared with untrusted account |
 
+### RDS Snapshots Shared with Untrusted Accounts
+
+| | |
+|---|---|
+| **Terraform** | `aws_rds_snapshot_untrusted_sharing.tf` |
+| **Rego** | `rego/aws_rds_snapshot_untrusted_sharing.rego` |
+| **Native Types** | `rds#snapshot`, `rds#clustersnapshot` |
+| **Severity** | HIGH |
+| **Globals** | `trusted_internal_accounts`, `trusted_external_accounts` |
+
+Fails if an RDS snapshot's `SharedAccounts` contains `"all"` (public) or an account not in either trusted list. No skip condition — all RDS snapshots are evaluated.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `rds_snapshot_sharing_pass.json` | PASS — no sharing (SharedAccounts is null) |
+| `rds_snapshot_sharing_pass_trusted.json` | PASS — shared with trusted external account |
+| `rds_snapshot_sharing_fail_public.json` | FAIL — shared publicly (SharedAccounts contains "all") |
+| `rds_snapshot_sharing_fail_untrusted.json` | FAIL — shared with untrusted account |
+
 ### S3 Buckets Shared with Untrusted Accounts
 
 | | |

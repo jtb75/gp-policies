@@ -1,0 +1,20 @@
+{
+  "AllocatedStorage": 20,
+  "DBInstanceIdentifier": "myapp-db",
+  "DBSnapshotArn": "arn:aws:rds:us-east-2:123456789012:snapshot:rds:myapp-db-2026-03-09",
+  "DBSnapshotIdentifier": "rds:myapp-db-2026-03-09",
+  "Encrypted": false,
+  "Engine": "postgres",
+  "EngineVersion": "16.10",
+  "SharedAccounts": null,
+  "SnapshotCreateTime": "2026-03-09T07:16:13.914Z",
+  "SnapshotType": "automated",
+  "Status": "available",
+  "TagList": [],
+  "WizMetadata": {
+    "externalId": "arn:aws:rds:us-east-2:123456789012:snapshot:rds:myapp-db-2026-03-09",
+    "isPublic": false,
+    "nativeType": "rds#snapshot",
+    "region": "us-east-2"
+  }
+}
