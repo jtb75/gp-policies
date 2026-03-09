@@ -374,6 +374,27 @@ Fails if an AWS root account has been used (password login or access key) within
 | `rootuser_fail.json` | FAIL — old account, root used today |
 | `rootuser_skip.json` | SKIP — account younger than 15 days |
 
+## Data Protection
+
+### Classified S3 Buckets Must Be Encrypted
+
+| | |
+|---|---|
+| **Terraform** | `aws_s3_classified_bucket_encryption.tf` |
+| **Rego** | `rego/aws_s3_classified_bucket_encryption.rego` |
+| **Native Type** | `bucket` |
+| **Severity** | HIGH |
+
+Fails if an S3 bucket tagged with `data-classification` of `confidential` or `highly-confidential` does not have server-side encryption configured. Buckets without a classified tag (or with other values like `public`) are skipped.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `bucket_classified_encryption_pass.json` | PASS — confidential bucket with KMS encryption |
+| `bucket_classified_encryption_fail.json` | FAIL — highly-confidential bucket with no encryption |
+| `bucket_classified_encryption_skip.json` | SKIP — bucket tagged as public |
+
 ## Database Configuration
 
 ### RDS Backup Retention Period

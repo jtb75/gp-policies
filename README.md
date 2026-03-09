@@ -29,12 +29,13 @@ gp-policies/
 
 ## Current Rules
 
-This repository manages 20 CCRs across six categories:
+This repository manages 21 CCRs across seven categories:
 
 - **Access Key Rotation** — 8 rules enforcing key age limits by account type (service/vendor/user/untagged), each with a hard limit and early warning
 - **Tag Enforcement** — 4 rules requiring valid `type` tags on IAM users and specific role lists (support/vendor/service)
 - **Untrusted Account Sharing** — 4 rules detecting EC2 snapshots, AMIs, RDS snapshots, and S3 buckets shared with accounts outside trusted lists
 - **Root Account Usage** — 1 rule alerting on root account activity, with an exemption for new accounts
+- **Data Protection** — 1 rule requiring encryption on S3 buckets tagged as confidential or highly-confidential
 - **Database Configuration** — 1 rule enforcing minimum 35-day backup retention on RDS instances
 - **KMS Key Management** — 2 rules warning on imported key material expiration and upcoming key rotation
 

@@ -1,0 +1,21 @@
+{
+  "Name": "highly-confidential-unencrypted-bucket",
+  "bucketTags": [
+    { "Key": "data-classification", "Value": "highly-confidential" },
+    { "Key": "team", "Value": "finance" }
+  ],
+  "bucketEncryptionConfiguration": null,
+  "bucketPolicy": null,
+  "bucketAcl": {
+    "Grants": [
+      {
+        "Grantee": { "ID": "owner-canonical-id", "Type": "CanonicalUser" },
+        "Permission": "FULL_CONTROL"
+      }
+    ]
+  },
+  "WizMetadata": {
+    "nativeType": "bucket",
+    "accountId": "123456789012"
+  }
+}
