@@ -7,17 +7,3 @@ imagePullSecrets:
 runners:
   rem-aws-ebs-007:
     enabled: true
-  rem-aws-ec2-031:
-    enabled: true
-  rem-aws-iam-025:
-    enabled: true
-  rem-aws-iam-045:
-    enabled: true
-  rem-aws-iam-223:
-    enabled: true
-  rem-aws-rds-002:
-    enabled: true
-  rem-aws-rds-003:
-    enabled: true
-  rem-aws-s3-046:
-    enabled: true
