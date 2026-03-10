@@ -1,0 +1,10 @@
+{
+  "RoleName": "support-saml-tier2",
+  "Arn": "arn:aws:iam::123456789012:role/support-saml-tier2",
+  "Tags": [
+    { "Key": "type", "Value": "support" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

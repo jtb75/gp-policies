@@ -259,6 +259,27 @@ Fails IAM roles matching names in `kbs_service_roles` that are missing a `type` 
 | `role_service_bad_type_tag.json` | FAIL — CICDServiceRole with `type=unknown` |
 | `role_not_service.json` | SKIP — role name not in list |
 
+### Support SAML Role Missing Type Tag
+
+| | |
+|---|---|
+| **Terraform** | `aws_support_saml_role_missing_type_tag.tf` |
+| **Rego** | `rego/aws_support_saml_role_missing_type_tag.rego` |
+| **Native Type** | `role` |
+| **Severity** | HIGH |
+| **Globals** | None |
+
+Fails IAM roles with "support-saml" in their name (case-insensitive) that are missing a `type:support` tag or have a different type tag value. Skips roles without "support-saml" in the name.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `role_support_saml_valid_type_tag.json` | PASS — support-saml-tier2 with `type=support` |
+| `role_support_saml_no_type_tag.json` | FAIL — support-saml-helpdesk with no type tag |
+| `role_support_saml_bad_type_tag.json` | FAIL — support-saml-admin with `type=vendor` |
+| `role_not_support_saml.json` | SKIP — role name doesn't contain "support-saml" |
+
 ### Deploy Role Missing Type Tag
 
 | | |

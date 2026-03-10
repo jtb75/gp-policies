@@ -1,0 +1,10 @@
+{
+  "RoleName": "support-saml-admin",
+  "Arn": "arn:aws:iam::123456789012:role/support-saml-admin",
+  "Tags": [
+    { "Key": "type", "Value": "vendor" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

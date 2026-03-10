@@ -1,0 +1,8 @@
+{
+  "RoleName": "support-saml-helpdesk",
+  "Arn": "arn:aws:iam::123456789012:role/support-saml-helpdesk",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}
