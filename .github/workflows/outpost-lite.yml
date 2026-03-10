@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CLUSTER_NAME: jtb75-wiz-remediation
-      NAMESPACE: outpost-lite
+      NAMESPACE: wiz-remediation
 
     steps:
       - name: Checkout
@@ -58,27 +58,8 @@ jobs:
           WIZ_OUTPOST_CLIENT_ID: ${{ secrets.WIZ_OUTPOST_CLIENT_ID }}
           WIZ_OUTPOST_CLIENT_SECRET: ${{ secrets.WIZ_OUTPOST_CLIENT_SECRET }}
           WIZ_OUTPOST_ID: ${{ secrets.WIZ_OUTPOST_ID }}
-          WIZ_OUTPOST_PRIVATE_KEY: ${{ secrets.WIZ_OUTPOST_PRIVATE_KEY }}
         run: |
-          cat > values.yaml <<EOF
-          agent:
-            clientId: "${WIZ_OUTPOST_CLIENT_ID}"
-            clientSecret: "${WIZ_OUTPOST_CLIENT_SECRET}"
-            outpostId: "${WIZ_OUTPOST_ID}"
-          encryption:
-            create: true
-            privateKey: |-
-          EOF
-          echo "${WIZ_OUTPOST_PRIVATE_KEY}" | sed 's/^/      /' >> values.yaml
-          cat >> values.yaml <<EOF
-          modules:
-            remediation:
-              enabled: true
-          imagePullSecrets:
-          - name: wiz-outpost-lite-image-pull
-          EOF
-          # Strip leading whitespace from heredoc indentation
-          sed -i 's/^          //' values.yaml
+          envsubst < remediation-infra/outpost-lite-values.tpl.yaml > values.yaml
           echo "--- Generated values.yaml (first 10 lines) ---"
           head -10 values.yaml
 
@@ -102,7 +83,6 @@ jobs:
         if: inputs.action == 'uninstall'
         run: |
           helm uninstall outpost-lite -n $NAMESPACE || true
-          kubectl delete namespace $NAMESPACE || true
 
       - name: Verify deployment
         if: inputs.action != 'uninstall'
