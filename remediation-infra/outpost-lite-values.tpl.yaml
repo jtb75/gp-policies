@@ -5,71 +5,19 @@ agent:
 imagePullSecrets:
 - name: wiz-outpost-lite-image-pull
 runners:
-  rem-aws-ebs-005:
-    enabled: true
-  rem-aws-ebs-006:
-    enabled: true
   rem-aws-ebs-007:
     enabled: true
-  rem-aws-ebs-009:
-    enabled: true
-  rem-aws-ec2-004:
-    enabled: true
   rem-aws-ec2-031:
-    enabled: true
-  rem-aws-ec2-response-001:
-    enabled: true
-  rem-aws-ec2-response-002:
-    enabled: true
-  rem-aws-ec2-response-003:
-    enabled: true
-  rem-aws-ec2-response-004:
-    enabled: true
-  rem-aws-ec2-response-005:
-    enabled: true
-  rem-aws-ec2-response-006:
-    enabled: true
-  rem-aws-ec2-response-007:
-    enabled: true
-  rem-aws-ec2-response-008:
-    enabled: true
-  rem-aws-ecs-response-001:
-    enabled: true
-  rem-aws-ecs-response-002:
-    enabled: true
-  rem-aws-iam-001:
     enabled: true
   rem-aws-iam-025:
     enabled: true
   rem-aws-iam-045:
     enabled: true
-  rem-aws-iam-087:
-    enabled: true
   rem-aws-iam-223:
-    enabled: true
-  rem-aws-kms-002:
-    enabled: true
-  rem-aws-lambda-response-001:
-    enabled: true
-  rem-aws-lambda-response-002:
-    enabled: true
-  rem-aws-lambda-response-003:
     enabled: true
   rem-aws-rds-002:
     enabled: true
   rem-aws-rds-003:
     enabled: true
-  rem-aws-redshift-002:
-    enabled: true
-  rem-aws-s3-001:
-    enabled: true
-  rem-aws-s3-002:
-    enabled: true
-  rem-aws-s3-003:
-    enabled: true
   rem-aws-s3-046:
-    enabled: true
-  rem-aws-s3-048:
-    enabled: true
-  rem-aws-s3-response-012:
     enabled: true
