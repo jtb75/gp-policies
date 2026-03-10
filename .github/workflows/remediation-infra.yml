@@ -1,6 +1,11 @@
 name: Remediation Infrastructure
 
 on:
+  push:
+    branches: [main]
+    paths: ['remediation-infra/**']
+  pull_request:
+    paths: ['remediation-infra/**']
   workflow_dispatch:
     inputs:
       action:
@@ -15,16 +20,15 @@ on:
 permissions:
   id-token: write
   contents: read
+  pull-requests: write
 
 jobs:
   terraform:
-    name: ${{ inputs.action }}
+    name: Terraform
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: remediation-infra
-    env:
-      AWS_DEFAULT_REGION: us-east-1
 
     steps:
       - name: Checkout
@@ -48,14 +52,39 @@ jobs:
       - name: Terraform Init
         run: terraform init -backend-config="bucket=${{ steps.account.outputs.bucket }}"
 
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
       - name: Terraform Plan
-        if: inputs.action == 'plan' || inputs.action == 'apply'
-        run: terraform plan -out=tfplan
+        if: |
+          github.event_name == 'pull_request' ||
+          github.event_name == 'push' ||
+          (github.event_name == 'workflow_dispatch' && inputs.action != 'destroy')
+        id: plan
+        run: terraform plan -out=tfplan -no-color 2>&1 | tee plan.txt
 
       - name: Terraform Plan Destroy
-        if: inputs.action == 'destroy'
-        run: terraform plan -destroy -out=tfplan
+        if: github.event_name == 'workflow_dispatch' && inputs.action == 'destroy'
+        run: terraform plan -destroy -out=tfplan -no-color 2>&1 | tee plan.txt
+
+      - name: Comment Plan on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const plan = fs.readFileSync('remediation-infra/plan.txt', 'utf8');
+            const truncated = plan.length > 60000 ? plan.substring(0, 60000) + '\n...(truncated)' : plan;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `### Remediation Infra Terraform Plan\n\`\`\`\n${truncated}\n\`\`\``
+            });
 
       - name: Terraform Apply
-        if: inputs.action == 'apply' || inputs.action == 'destroy'
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          (github.event_name == 'workflow_dispatch' && (inputs.action == 'apply' || inputs.action == 'destroy'))
         run: terraform apply tfplan
