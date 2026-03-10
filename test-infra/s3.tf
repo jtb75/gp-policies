@@ -11,6 +11,14 @@ resource "aws_s3_bucket" "test_untrusted_sharing" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "test_untrusted_sharing" {
+  bucket                  = aws_s3_bucket.test_untrusted_sharing.id
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = false
+  restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_policy" "test_untrusted_sharing" {
   bucket = aws_s3_bucket.test_untrusted_sharing.id
   policy = jsonencode({
@@ -25,6 +33,7 @@ resource "aws_s3_bucket_policy" "test_untrusted_sharing" {
       }
     ]
   })
+  depends_on = [aws_s3_bucket_public_access_block.test_untrusted_sharing]
 }
 
 # Triggers: aws_s3_classified_bucket_encryption (classified bucket without encryption)
