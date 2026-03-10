@@ -7,3 +7,5 @@ imagePullSecrets:
 runners:
   rem-aws-ebs-007:
     enabled: true
+  rem-custom-0008:
+    enabled: true

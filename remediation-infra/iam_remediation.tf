@@ -15,6 +15,10 @@ module "remediation_roles" {
       "ec2:ModifySnapshotAttribute",
       "ec2:DescribeSnapshotAttribute",
       "ec2:CreateTags"
+    ],
+    "rem-custom-0008" : [
+      "iam:GetRole",
+      "iam:TagRole"
     ]
   }
 }
