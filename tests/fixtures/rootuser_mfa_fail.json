@@ -1,0 +1,17 @@
+{
+  "AccountMFAEnabled": 0,
+  "AccountPasswordPresent": 1,
+  "WizMetadata": {
+    "externalId": "arn:aws:iam::123456789012:root",
+    "nativeType": "rootUser",
+    "region": null
+  },
+  "userCredentials": {
+    "AccessKey1Active": "false",
+    "AccessKey2Active": "false",
+    "Arn": "arn:aws:iam::123456789012:root",
+    "MfaActive": "false",
+    "User": "<root_account>",
+    "UserCreationTime": "2020-01-01T00:00:00Z"
+  }
+}

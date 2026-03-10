@@ -45,6 +45,9 @@ rds_backup_retention_days := 35
 kms_expiration_warning_days := 5
 kms_rotation_warning_days := 5
 
+# Root MFA grace period — new accounts get this many days before MFA is required.
+root_mfa_grace_days := 10
+
 # Known support role names.
 # Used to identify roles that should have a valid "type" tag.
 # Role names are matched case-sensitively against this set.

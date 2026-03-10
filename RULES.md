@@ -500,6 +500,26 @@ Fails if an AWS root account has been used (password login or access key) within
 | `rootuser_fail.json` | FAIL — old account, root used today |
 | `rootuser_skip.json` | SKIP — account younger than 15 days |
 
+### Root Account Missing MFA
+
+| | |
+|---|---|
+| **Terraform** | `aws_root_missing_mfa.tf` |
+| **Rego** | `rego/aws_root_missing_mfa.rego` |
+| **Native Type** | `rootUser` |
+| **Severity** | CRITICAL |
+| **Globals** | `root_mfa_grace_days` |
+
+Fails if an AWS root account does not have MFA enabled (`AccountMFAEnabled != 1`). Accounts younger than the grace period (default 10 days) are skipped to allow for account build automation.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `rootuser_mfa_pass.json` | PASS — MFA enabled |
+| `rootuser_mfa_fail.json` | FAIL — MFA not enabled, account older than 10 days |
+| `rootuser_mfa_skip.json` | SKIP — account younger than 10 days |
+
 ### Root Account with Programmatic Access Key
 
 | | |
@@ -668,3 +688,4 @@ The `wiz_custom_rego_package` resource (`rego/packages/jtb75_globals.rego`) prov
 | `rds_backup_retention_days` | RDS backup retention |
 | `kms_expiration_warning_days` | KMS key expiration warning |
 | `kms_rotation_warning_days` | KMS key rotation warning |
+| `root_mfa_grace_days` | Root MFA rule (skip threshold) |

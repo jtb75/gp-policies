@@ -94,6 +94,10 @@ TESTS = [
     ("rootuser_pass.json", "rego/aws_root_account_usage.rego", "rootUser", "pass"),
     ("rootuser_fail.json", "rego/aws_root_account_usage.rego", "rootUser", "fail"),
     ("rootuser_skip.json", "rego/aws_root_account_usage.rego", "rootUser", "skip"),
+    # Root account missing MFA
+    ("rootuser_mfa_pass.json", "rego/aws_root_missing_mfa.rego", "rootUser", "pass"),
+    ("rootuser_mfa_fail.json", "rego/aws_root_missing_mfa.rego", "rootUser", "fail"),
+    ("rootuser_mfa_skip.json", "rego/aws_root_missing_mfa.rego", "rootUser", "skip"),
     # Root account access key
     ("rootuser_access_key_fail.json", "rego/aws_root_access_key.rego", "rootUser", "fail"),
     ("rootuser_access_key_pass.json", "rego/aws_root_access_key.rego", "rootUser", "pass"),
