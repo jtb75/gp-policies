@@ -71,6 +71,9 @@ jobs:
           EOF
           echo "${WIZ_OUTPOST_PRIVATE_KEY}" | sed 's/^/      /' >> values.yaml
           cat >> values.yaml <<EOF
+          modules:
+            remediation:
+              enabled: true
           imagePullSecrets:
           - name: wiz-outpost-lite-image-pull
           EOF
