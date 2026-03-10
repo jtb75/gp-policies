@@ -1,0 +1,11 @@
+{
+  "RoleName": "CodeBuildServiceRole",
+  "Arn": "arn:aws:iam::123456789012:role/service-role/CodeBuildServiceRole",
+  "Path": "/service-role/",
+  "Tags": [
+    { "Key": "type", "Value": "vendor" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

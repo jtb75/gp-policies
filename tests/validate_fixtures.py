@@ -134,6 +134,11 @@ TESTS = [
     ("bucket_sharing_fail_public_acl.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_fail_inventory.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_pass_trusted_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
+    # Service/service-linked role missing type tag
+    ("role_service_path_no_type_tag.json", "rego/aws_service_linked_role_missing_type_tag.rego", "role", "fail"),
+    ("role_service_path_valid_type_tag.json", "rego/aws_service_linked_role_missing_type_tag.rego", "role", "pass"),
+    ("role_service_path_bad_type_tag.json", "rego/aws_service_linked_role_missing_type_tag.rego", "role", "fail"),
+    ("role_not_service_path.json", "rego/aws_service_linked_role_missing_type_tag.rego", "role", "skip"),
     # Administrator role missing type tag
     ("role_administrator_no_type_tag.json", "rego/aws_administrator_role_missing_type_tag.rego", "role", "fail"),
     ("role_administrator_valid_type_tag.json", "rego/aws_administrator_role_missing_type_tag.rego", "role", "pass"),

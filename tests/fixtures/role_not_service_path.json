@@ -1,0 +1,9 @@
+{
+  "RoleName": "AppDeveloperRole",
+  "Arn": "arn:aws:iam::123456789012:role/AppDeveloperRole",
+  "Path": "/",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

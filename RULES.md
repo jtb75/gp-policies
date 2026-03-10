@@ -259,6 +259,27 @@ Fails IAM roles matching names in `kbs_service_roles` that are missing a `type` 
 | `role_service_bad_type_tag.json` | FAIL — CICDServiceRole with `type=unknown` |
 | `role_not_service.json` | SKIP — role name not in list |
 
+### Service/Service-Linked Role Missing Type Tag
+
+| | |
+|---|---|
+| **Terraform** | `aws_service_linked_role_missing_type_tag.tf` |
+| **Rego** | `rego/aws_service_linked_role_missing_type_tag.rego` |
+| **Native Type** | `role` |
+| **Severity** | HIGH |
+| **Globals** | None |
+
+Fails IAM roles with Path `/service-role/` or `/aws-service-role/` that are missing a `type:service` tag. These paths are used by AWS for service roles and service-linked roles. Skips roles with other paths.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `role_service_path_valid_type_tag.json` | PASS — /service-role/ path with `type=service` |
+| `role_service_path_no_type_tag.json` | FAIL — /aws-service-role/ path with no type tag |
+| `role_service_path_bad_type_tag.json` | FAIL — /service-role/ path with `type=vendor` |
+| `role_not_service_path.json` | SKIP — path is `/` |
+
 ### Administrator Role Missing Type Tag
 
 | | |

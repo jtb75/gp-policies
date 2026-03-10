@@ -1,0 +1,9 @@
+{
+  "RoleName": "AWSServiceRoleForECS",
+  "Arn": "arn:aws:iam::123456789012:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+  "Path": "/aws-service-role/ecs.amazonaws.com/",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}
