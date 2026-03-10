@@ -1,0 +1,104 @@
+name: Outpost Lite - Wiz Helm Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - install
+          - upgrade
+          - uninstall
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: ${{ inputs.action }}
+    runs-on: ubuntu-latest
+    env:
+      CLUSTER_NAME: jtb75-wiz-remediation
+      NAMESPACE: outpost-lite
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Configure kubectl
+        run: aws eks update-kubeconfig --name $CLUSTER_NAME --region us-east-1
+
+      - name: Create namespace
+        if: inputs.action != 'uninstall'
+        run: kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Create image pull secret
+        if: inputs.action != 'uninstall'
+        run: |
+          kubectl create secret docker-registry wiz-outpost-lite-image-pull \
+            --docker-server=wizio.azurecr.io \
+            --docker-username="${{ secrets.WIZ_DOCKER_USERNAME }}" \
+            --docker-password="${{ secrets.WIZ_DOCKER_PASSWORD }}" \
+            --docker-email="" \
+            -n $NAMESPACE \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Generate values.yaml
+        if: inputs.action != 'uninstall'
+        run: |
+          cat > values.yaml <<'VALEOF'
+          agent:
+            clientId: ${{ secrets.WIZ_OUTPOST_CLIENT_ID }}
+            clientSecret: ${{ secrets.WIZ_OUTPOST_CLIENT_SECRET }}
+            outpostId: ${{ secrets.WIZ_OUTPOST_ID }}
+          encryption:
+            create: true
+            privateKey: |-
+          VALEOF
+
+          # Append private key with proper indentation
+          echo '${{ secrets.WIZ_OUTPOST_PRIVATE_KEY }}' | sed 's/^/      /' >> values.yaml
+
+          # Append image pull secrets
+          cat >> values.yaml <<'VALEOF'
+          imagePullSecrets:
+          - name: wiz-outpost-lite-image-pull
+          VALEOF
+
+      - name: Add Wiz Helm repo
+        if: inputs.action != 'uninstall'
+        run: |
+          helm repo add wiz-sec https://charts.wiz.io
+          helm repo update
+
+      - name: Install / Upgrade Outpost Lite
+        if: inputs.action != 'uninstall'
+        run: |
+          helm upgrade outpost-lite wiz-sec/wiz-outpost-lite \
+            --install \
+            --values=values.yaml \
+            -n $NAMESPACE \
+            --wait \
+            --timeout 10m
+
+      - name: Uninstall Outpost Lite
+        if: inputs.action == 'uninstall'
+        run: |
+          helm uninstall outpost-lite -n $NAMESPACE || true
+          kubectl delete namespace $NAMESPACE || true
+
+      - name: Verify deployment
+        if: inputs.action != 'uninstall'
+        run: |
+          kubectl get pods -n $NAMESPACE
+          echo ""
+          helm list -n $NAMESPACE
