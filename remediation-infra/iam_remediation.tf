@@ -8,7 +8,7 @@ resource "aws_iam_role" "remediation_runner" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect = "Allow"
+      Effect    = "Allow"
       Principal = { Service = "pods.eks.amazonaws.com" }
       Action = [
         "sts:AssumeRole",
@@ -25,8 +25,8 @@ resource "aws_iam_role_policy" "runner_assume_worker" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect   = "Allow"
-      Action   = "sts:AssumeRole"
+      Effect = "Allow"
+      Action = "sts:AssumeRole"
       Resource = concat(
         [aws_iam_role.remediation_worker_local.arn],
         [for id in var.remediation_target_account_ids :
@@ -54,9 +54,9 @@ resource "aws_iam_role" "remediation_worker_local" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect = "Allow"
+      Effect    = "Allow"
       Principal = { AWS = aws_iam_role.remediation_runner.arn }
-      Action = "sts:AssumeRole"
+      Action    = "sts:AssumeRole"
     }]
   })
 }

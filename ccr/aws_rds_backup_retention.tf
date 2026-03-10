@@ -1,7 +1,7 @@
 resource "wiz_cloud_configuration_rule" "aws_rds_backup_retention" {
-  name                     = "JTB75 - RDS backup retention period should be at least 35 days"
-  description              = "Identifies RDS database instances with a backup retention period below 35 days. Read replicas are skipped. This threshold is based on GP DBA team best practices."
-  target_native_types      = [
+  name        = "JTB75 - RDS backup retention period should be at least 35 days"
+  description = "Identifies RDS database instances with a backup retention period below 35 days. Read replicas are skipped. This threshold is based on GP DBA team best practices."
+  target_native_types = [
     "rds/AmazonAuroraMySQL/instance",
     "rds/AmazonAuroraPostgreSQL/instance",
     "rds/AmazonDocDB/instance",
