@@ -259,6 +259,27 @@ Fails IAM roles matching names in `kbs_service_roles` that are missing a `type` 
 | `role_service_bad_type_tag.json` | FAIL — CICDServiceRole with `type=unknown` |
 | `role_not_service.json` | SKIP — role name not in list |
 
+### Deploy Role Missing Type Tag
+
+| | |
+|---|---|
+| **Terraform** | `aws_deploy_role_missing_type_tag.tf` |
+| **Rego** | `rego/aws_deploy_role_missing_type_tag.rego` |
+| **Native Type** | `role` |
+| **Severity** | HIGH |
+| **Globals** | None |
+
+Fails IAM roles with "deploy-" in their name (case-insensitive) that are missing a `type:deployment` tag or have a different type tag value. Skips roles without "deploy-" in the name.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `role_deploy_valid_type_tag.json` | PASS — deploy-app-release with `type=deployment` |
+| `role_deploy_no_type_tag.json` | FAIL — deploy-pipeline-executor with no type tag |
+| `role_deploy_bad_type_tag.json` | FAIL — deploy-infra-provisioner with `type=service` |
+| `role_not_deploy.json` | SKIP — role name doesn't contain "deploy-" |
+
 ### Consumer Role Missing Type Tag
 
 | | |

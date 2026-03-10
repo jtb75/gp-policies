@@ -1,0 +1,10 @@
+{
+  "RoleName": "deploy-app-release",
+  "Arn": "arn:aws:iam::123456789012:role/deploy-app-release",
+  "Tags": [
+    { "Key": "type", "Value": "deployment" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

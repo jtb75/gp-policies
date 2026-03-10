@@ -1,0 +1,8 @@
+{
+  "RoleName": "deploy-pipeline-executor",
+  "Arn": "arn:aws:iam::123456789012:role/deploy-pipeline-executor",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

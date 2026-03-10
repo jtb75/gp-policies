@@ -1,0 +1,10 @@
+{
+  "RoleName": "deploy-infra-provisioner",
+  "Arn": "arn:aws:iam::123456789012:role/deploy-infra-provisioner",
+  "Tags": [
+    { "Key": "type", "Value": "service" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

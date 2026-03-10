@@ -127,6 +127,11 @@ TESTS = [
     ("bucket_sharing_fail_public_acl.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_fail_inventory.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_pass_trusted_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
+    # Deploy role missing type tag
+    ("role_deploy_no_type_tag.json", "rego/aws_deploy_role_missing_type_tag.rego", "role", "fail"),
+    ("role_deploy_valid_type_tag.json", "rego/aws_deploy_role_missing_type_tag.rego", "role", "pass"),
+    ("role_deploy_bad_type_tag.json", "rego/aws_deploy_role_missing_type_tag.rego", "role", "fail"),
+    ("role_not_deploy.json", "rego/aws_deploy_role_missing_type_tag.rego", "role", "skip"),
     # Consumer role missing type tag
     ("role_consumer_no_type_tag.json", "rego/aws_consumer_role_missing_type_tag.rego", "role", "fail"),
     ("role_consumer_valid_type_tag.json", "rego/aws_consumer_role_missing_type_tag.rego", "role", "pass"),
