@@ -65,10 +65,34 @@ resource "aws_eks_cluster" "remediation" {
     endpoint_public_access  = true
   }
 
+  access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_policy,
     aws_iam_role_policy_attachment.eks_vpc_resource_controller,
   ]
+}
+
+# Cluster admin access entries
+resource "aws_eks_access_entry" "admins" {
+  for_each      = toset(var.cluster_admin_arns)
+  cluster_name  = aws_eks_cluster.remediation.name
+  principal_arn = each.value
+}
+
+resource "aws_eks_access_policy_association" "admins" {
+  for_each      = toset(var.cluster_admin_arns)
+  cluster_name  = aws_eks_cluster.remediation.name
+  principal_arn = each.value
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [aws_eks_access_entry.admins]
 }
 
 # EKS Pod Identity Agent add-on (required for Outpost Lite)
