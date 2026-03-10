@@ -14,6 +14,7 @@ resource "aws_db_instance" "test_low_retention" {
   backup_retention_period = 7
   skip_final_snapshot     = true
   apply_immediately       = true
+  db_subnet_group_name    = aws_db_subnet_group.test.name
   tags = {
     Purpose = "test-ccr"
   }
@@ -31,6 +32,7 @@ resource "aws_db_instance" "test_good_retention" {
   backup_retention_period = 35
   skip_final_snapshot     = true
   apply_immediately       = true
+  db_subnet_group_name    = aws_db_subnet_group.test.name
   tags = {
     Purpose = "test-ccr"
   }

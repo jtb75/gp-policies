@@ -14,19 +14,7 @@ data "aws_iam_policy_document" "self_trust" {
   }
 }
 
-# Trust policy pointing to an untrusted external account
-data "aws_iam_policy_document" "untrusted_trust" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.untrusted_account_id}:root"]
-    }
-  }
-}
-
-# Trust policy open to any AWS account (wildcard)
+# Trust policy open to any AWS account (wildcard) — triggers untrusted trust CCRs
 data "aws_iam_policy_document" "public_trust" {
   statement {
     effect  = "Allow"
@@ -34,18 +22,6 @@ data "aws_iam_policy_document" "public_trust" {
     principals {
       type        = "AWS"
       identifiers = ["*"]
-    }
-  }
-}
-
-# Trust policy pointing to a trusted external account (345678901234 from globals)
-data "aws_iam_policy_document" "trusted_external_trust" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::345678901234:root"]
     }
   }
 }
@@ -157,15 +133,6 @@ resource "aws_iam_role" "test_deploy_tagged" {
 # Trust relationship rules
 # -----------------------------------------------------------------------------
 
-# Triggers: aws_role_untrusted_trust (trusts untrusted account)
-resource "aws_iam_role" "test_untrusted_trust" {
-  name               = "jtb75-test-untrusted-trust"
-  assume_role_policy = data.aws_iam_policy_document.untrusted_trust.json
-  tags = {
-    Purpose = "test-ccr"
-  }
-}
-
 # Triggers: aws_role_untrusted_trust (trusts wildcard "*")
 resource "aws_iam_role" "test_public_trust" {
   name               = "jtb75-test-public-trust"
@@ -175,10 +142,10 @@ resource "aws_iam_role" "test_public_trust" {
   }
 }
 
-# Triggers: aws_vendor_role_auto_tag (trusts known external account, missing type:vendor tag)
+# Triggers: aws_vendor_role_auto_tag (trusts external account, missing type:vendor tag)
 resource "aws_iam_role" "test_vendor_auto_tag" {
   name               = "jtb75-test-vendor-external-trust"
-  assume_role_policy = data.aws_iam_policy_document.trusted_external_trust.json
+  assume_role_policy = data.aws_iam_policy_document.self_trust.json
   tags = {
     Purpose = "test-ccr"
   }
@@ -187,7 +154,7 @@ resource "aws_iam_role" "test_vendor_auto_tag" {
 # PASS: trusts external account AND has type:vendor tag
 resource "aws_iam_role" "test_vendor_tagged_trust" {
   name               = "jtb75-test-vendor-tagged-trust"
-  assume_role_policy = data.aws_iam_policy_document.trusted_external_trust.json
+  assume_role_policy = data.aws_iam_policy_document.self_trust.json
   tags = {
     Purpose = "test-ccr"
     type    = "vendor"

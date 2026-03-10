@@ -19,7 +19,7 @@ resource "aws_s3_bucket_policy" "test_untrusted_sharing" {
       {
         Sid       = "AllowUntrustedAccount"
         Effect    = "Allow"
-        Principal = { AWS = "arn:aws:iam::${var.untrusted_account_id}:root" }
+        Principal = "*"
         Action    = "s3:GetObject"
         Resource  = "${aws_s3_bucket.test_untrusted_sharing.arn}/*"
       }

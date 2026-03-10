@@ -17,7 +17,6 @@ output "role_arns" {
     kbs_support         = aws_iam_role.test_kbs_support_no_tag.arn
     kbs_vendor          = aws_iam_role.test_kbs_vendor_no_tag.arn
     kbs_service         = aws_iam_role.test_kbs_service_no_tag.arn
-    untrusted_trust     = aws_iam_role.test_untrusted_trust.arn
     public_trust        = aws_iam_role.test_public_trust.arn
     vendor_auto_tag     = aws_iam_role.test_vendor_auto_tag.arn
   }
