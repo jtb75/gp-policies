@@ -5,6 +5,13 @@ terraform {
       version = ">= 1.0"
     }
   }
+
+  backend "s3" {
+    key            = "ccr/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "jtb75-terraform-locks"
+    encrypt        = true
+  }
 }
 
 # Authentication via environment variables:
