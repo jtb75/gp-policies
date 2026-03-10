@@ -46,11 +46,6 @@ variable "remediation_namespace" {
   default     = "wiz-remediation"
 }
 
-variable "remediation_target_account_ids" {
-  description = "List of AWS account IDs where remediation roles should be created"
-  type        = list(string)
-  default     = []
-}
 
 variable "cluster_admin_arns" {
   description = "List of IAM ARNs to grant cluster admin access"

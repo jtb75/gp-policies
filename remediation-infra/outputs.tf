@@ -17,12 +17,12 @@ output "cluster_certificate_authority" {
 
 output "runner_role_arn" {
   description = "ARN of the Pod Identity runner role — configure this in Wiz R&R deployment"
-  value       = aws_iam_role.remediation_runner.arn
+  value       = module.remediation_roles.runner_role_arn
 }
 
-output "worker_role_arn" {
-  description = "ARN of the local remediation worker role"
-  value       = aws_iam_role.remediation_worker_local.arn
+output "remediation_role_arns" {
+  description = "ARNs of per-action remediation roles"
+  value       = module.remediation_roles.remediation_role_arns
 }
 
 output "remediation_namespace" {
