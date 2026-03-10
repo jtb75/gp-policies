@@ -1,0 +1,10 @@
+{
+  "RoleName": "InternalServiceRole",
+  "Arn": "arn:aws:iam::123456789012:role/InternalServiceRole",
+  "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role",
+    "region": null
+  }
+}

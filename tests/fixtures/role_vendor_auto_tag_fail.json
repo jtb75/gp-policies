@@ -1,0 +1,10 @@
+{
+  "RoleName": "ExternalPartnerAccess",
+  "Arn": "arn:aws:iam::123456789012:role/ExternalPartnerAccess",
+  "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::345678901234:root\"},\"Action\":\"sts:AssumeRole\"}]}",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role",
+    "region": null
+  }
+}

@@ -259,6 +259,27 @@ Fails IAM roles matching names in `kbs_service_roles` that are missing a `type` 
 | `role_service_bad_type_tag.json` | FAIL — CICDServiceRole with `type=unknown` |
 | `role_not_service.json` | SKIP — role name not in list |
 
+### Vendor Role Auto-Tag (Trust-Based Detection)
+
+| | |
+|---|---|
+| **Terraform** | `aws_vendor_role_auto_tag.tf` |
+| **Rego** | `rego/aws_vendor_role_auto_tag.rego` |
+| **Native Type** | `role` |
+| **Severity** | INFORMATIONAL |
+| **Globals** | `trusted_external_accounts` |
+
+Dynamically identifies vendor roles by their trust relationships rather than a hardcoded name list. Fails if a role trusts an account in `trusted_external_accounts` but is missing a `type:vendor` tag. Skips roles that only trust AWS services, federated providers, or internal accounts.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `role_vendor_auto_tag_pass.json` | PASS — trusts external account, has type:vendor tag |
+| `role_vendor_auto_tag_fail.json` | FAIL — trusts external account, missing type:vendor tag |
+| `role_vendor_auto_tag_skip.json` | SKIP — only trusts AWS service (Lambda) |
+| `role_vendor_auto_tag_skip_internal.json` | SKIP — trusts internal account only |
+
 ## Untrusted Account Sharing
 
 ### EC2 Snapshots Shared with Untrusted Accounts

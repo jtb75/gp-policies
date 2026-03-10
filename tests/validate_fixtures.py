@@ -127,6 +127,11 @@ TESTS = [
     ("bucket_sharing_fail_public_acl.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_fail_inventory.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_pass_trusted_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
+    # Vendor role auto-tag based on trust relationship
+    ("role_vendor_auto_tag_fail.json", "rego/aws_vendor_role_auto_tag.rego", "role", "fail"),
+    ("role_vendor_auto_tag_pass.json", "rego/aws_vendor_role_auto_tag.rego", "role", "pass"),
+    ("role_vendor_auto_tag_skip.json", "rego/aws_vendor_role_auto_tag.rego", "role", "skip"),
+    ("role_vendor_auto_tag_skip_internal.json", "rego/aws_vendor_role_auto_tag.rego", "role", "skip"),
     # IAM user AWS managed policy
     ("user_aws_managed_policy_fail.json", "rego/aws_user_aws_managed_policy.rego", "user", "fail"),
     ("user_aws_managed_policy_pass.json", "rego/aws_user_aws_managed_policy.rego", "user", "pass"),

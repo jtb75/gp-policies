@@ -1,0 +1,10 @@
+{
+  "RoleName": "CrossAccountInternalRole",
+  "Arn": "arn:aws:iam::123456789012:role/CrossAccountInternalRole",
+  "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::234567890123:root\"},\"Action\":\"sts:AssumeRole\"}]}",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role",
+    "region": null
+  }
+}
