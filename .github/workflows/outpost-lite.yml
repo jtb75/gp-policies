@@ -54,25 +54,30 @@ jobs:
 
       - name: Generate values.yaml
         if: inputs.action != 'uninstall'
+        env:
+          WIZ_OUTPOST_CLIENT_ID: ${{ secrets.WIZ_OUTPOST_CLIENT_ID }}
+          WIZ_OUTPOST_CLIENT_SECRET: ${{ secrets.WIZ_OUTPOST_CLIENT_SECRET }}
+          WIZ_OUTPOST_ID: ${{ secrets.WIZ_OUTPOST_ID }}
+          WIZ_OUTPOST_PRIVATE_KEY: ${{ secrets.WIZ_OUTPOST_PRIVATE_KEY }}
         run: |
-          cat > values.yaml <<'VALEOF'
+          cat > values.yaml <<EOF
           agent:
-            clientId: ${{ secrets.WIZ_OUTPOST_CLIENT_ID }}
-            clientSecret: ${{ secrets.WIZ_OUTPOST_CLIENT_SECRET }}
-            outpostId: ${{ secrets.WIZ_OUTPOST_ID }}
+            clientId: "${WIZ_OUTPOST_CLIENT_ID}"
+            clientSecret: "${WIZ_OUTPOST_CLIENT_SECRET}"
+            outpostId: "${WIZ_OUTPOST_ID}"
           encryption:
             create: true
             privateKey: |-
-          VALEOF
-
-          # Append private key with proper indentation
-          echo '${{ secrets.WIZ_OUTPOST_PRIVATE_KEY }}' | sed 's/^/      /' >> values.yaml
-
-          # Append image pull secrets
-          cat >> values.yaml <<'VALEOF'
+          EOF
+          echo "${WIZ_OUTPOST_PRIVATE_KEY}" | sed 's/^/      /' >> values.yaml
+          cat >> values.yaml <<EOF
           imagePullSecrets:
           - name: wiz-outpost-lite-image-pull
-          VALEOF
+          EOF
+          # Strip leading whitespace from heredoc indentation
+          sed -i 's/^          //' values.yaml
+          echo "--- Generated values.yaml (first 10 lines) ---"
+          head -10 values.yaml
 
       - name: Add Wiz Helm repo
         if: inputs.action != 'uninstall'
