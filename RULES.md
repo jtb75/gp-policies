@@ -259,6 +259,27 @@ Fails IAM roles matching names in `kbs_service_roles` that are missing a `type` 
 | `role_service_bad_type_tag.json` | FAIL — CICDServiceRole with `type=unknown` |
 | `role_not_service.json` | SKIP — role name not in list |
 
+### Administrator Role Missing Type Tag
+
+| | |
+|---|---|
+| **Terraform** | `aws_administrator_role_missing_type_tag.tf` |
+| **Rego** | `rego/aws_administrator_role_missing_type_tag.rego` |
+| **Native Type** | `role` |
+| **Severity** | HIGH |
+| **Globals** | None |
+
+Fails if the IAM role named "Administrator" (case-insensitive exact match) is missing a `type:support` tag or has a different type tag value. Skips all other roles.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `role_administrator_valid_type_tag.json` | PASS — Administrator with `type=support` |
+| `role_administrator_no_type_tag.json` | FAIL — Administrator with no type tag |
+| `role_administrator_bad_type_tag.json` | FAIL — Administrator with `type=service` |
+| `role_not_administrator.json` | SKIP — role name is not Administrator |
+
 ### Support SAML Role Missing Type Tag
 
 | | |

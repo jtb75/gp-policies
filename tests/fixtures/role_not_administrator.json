@@ -1,0 +1,8 @@
+{
+  "RoleName": "PowerUserAccess",
+  "Arn": "arn:aws:iam::123456789012:role/PowerUserAccess",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

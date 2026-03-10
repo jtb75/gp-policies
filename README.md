@@ -29,10 +29,10 @@ gp-policies/
 
 ## Current Rules
 
-This repository manages 28 CCRs across nine categories:
+This repository manages 29 CCRs across nine categories:
 
 - **Access Key Rotation** — 8 rules enforcing key age limits by account type (service/vendor/user/untagged), each with a hard limit and early warning
-- **Tag Enforcement** — 8 rules requiring valid `type` tags on IAM users, specific role lists, consumer roles, deploy roles, support-saml roles, and roles with external trust relationships
+- **Tag Enforcement** — 9 rules requiring valid `type` tags on IAM users, specific role lists, consumer roles, deploy roles, support-saml roles, the Administrator role, and roles with external trust relationships
 - **Untrusted Account Sharing** — 5 rules detecting EC2 snapshots, AMIs, RDS snapshots, S3 buckets, and IAM role trusts shared with accounts outside trusted lists
 - **Root Account Usage** — 1 rule alerting on root account activity, with an exemption for new accounts
 - **Data Protection** — 1 rule requiring encryption on S3 buckets tagged as confidential or highly-confidential
@@ -95,7 +95,7 @@ source .env
 python tests/validate_fixtures.py
 ```
 
-This runs all 98 fixture/rule combinations and reports pass/fail. When adding a new rule, add its test cases to `validate_fixtures.py` in the `TESTS` list.
+This runs all 102 fixture/rule combinations and reports pass/fail. When adding a new rule, add its test cases to `validate_fixtures.py` in the `TESTS` list.
 
 ### Fetch Real Resource JSON for Fixtures
 

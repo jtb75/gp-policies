@@ -1,0 +1,10 @@
+{
+  "RoleName": "Administrator",
+  "Arn": "arn:aws:iam::123456789012:role/Administrator",
+  "Tags": [
+    { "Key": "type", "Value": "service" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

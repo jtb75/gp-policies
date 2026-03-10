@@ -1,0 +1,8 @@
+{
+  "RoleName": "Administrator",
+  "Arn": "arn:aws:iam::123456789012:role/Administrator",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}
