@@ -184,20 +184,148 @@ To add new shared variables, edit `rego/packages/jtb75_globals.rego`. Changes ar
 
 ## Common Patterns
 
-### Filter by Tag Value
+### Tag Checking — Array Format (IAM Roles, Users, S3 Buckets)
+
+IAM roles, users, and S3 buckets use an array-of-objects format for tags:
 
 ```rego
-# Check if a resource has a specific tag
-is_vendor if {
+# IAM roles/users: input.Tags is [{Key, Value}, ...]
+has_type_tag if {
     some tag in input.Tags
-    tag.Key == "type"
-    tag.Value == "vendor"
+    lower(tag.Key) == "type"
+    lower(tag.Value) == "service"
 }
 
-# Skip resources that don't match
-result = "skip" if {
-    not is_vendor
+# S3 buckets use a different field name but same format:
+# input.bucketTags is [{Key, Value}, ...]
+has_confidential_tag if {
+    some tag in input.bucketTags
+    lower(tag.Key) == "classification"
+    lower(tag.Value) == "confidential"
 }
+```
+
+### Tag Checking — Map Format (API Gateway)
+
+API Gateway resources use a simple key-value map for tags:
+
+```rego
+# API Gateway: input.Tags is {"key": "value", ...}
+has_auth_exemption if {
+    some key, val in input.Tags
+    lower(key) == "authentication"
+    lower(val) == "kochid"
+}
+```
+
+**Important:** Always check the actual resource JSON from Wiz to determine which tag format a native type uses. Using the wrong iteration pattern will silently produce no matches.
+
+### Name-Based Matching
+
+Match resources by name pattern (case-insensitive):
+
+```rego
+# Contains check — matches "consumer-role", "MyConsumerAccess", etc.
+is_consumer_role if {
+    contains(lower(input.RoleName), "consumer")
+}
+
+# Exact match
+is_administrator if {
+    lower(input.RoleName) == "administrator"
+}
+
+# Prefix check
+is_deploy_role if {
+    contains(lower(input.RoleName), "deploy-")
+}
+```
+
+### Path-Based Matching
+
+Match IAM roles by their AWS path:
+
+```rego
+# Service roles use /service-role/ or /aws-service-role/ paths
+is_service_path_role if {
+    contains(lower(input.Path), "/service-role/")
+}
+
+is_service_path_role if {
+    contains(lower(input.Path), "/aws-service-role/")
+}
+```
+
+Note: Multiple definitions of the same helper rule act as OR — the role matches if it has either path.
+
+### Skip/Fail Guard Pattern
+
+When a rule has both `skip` and `fail` results, Rego can conflict if both conditions are true simultaneously. Use a guard to prevent this:
+
+```rego
+# Helper to check skip condition
+is_skip if {
+    not is_consumer_role
+}
+
+# Skip non-matching resources
+result = "skip" if {
+    is_skip
+}
+
+# Only fail if we didn't skip — the "not is_skip" guard prevents conflicts
+result = "fail" if {
+    not is_skip
+    not has_correct_tag
+}
+```
+
+**Why this matters:** Without the `not is_skip` guard in the fail rule, Rego may try to assign both `"skip"` and `"fail"` to `result` simultaneously, which causes a conflict error. The guard ensures only one result can be assigned.
+
+### Parsing JSON String Fields
+
+Some AWS fields (like `AssumeRolePolicyDocument`, `bucketPolicy`) are JSON strings, not objects. You must parse them before traversal:
+
+```rego
+# Parse the trust policy (it's a JSON string, not an object)
+trust_policy := json.unmarshal(input.AssumeRolePolicyDocument)
+
+# Now traverse normally
+result = "fail" if {
+    some statement in trust_policy.Statement
+    statement.Effect == "Allow"
+    statement.Principal == "*"
+}
+```
+
+**Tip:** If a field looks like it should be an object but your rule isn't matching, check whether it's actually a JSON string that needs `json.unmarshal()`.
+
+### Handling String-or-Array Fields
+
+Some AWS fields can be either a single string or an array (e.g., `Principal.AWS` in trust policies). Handle both:
+
+```rego
+# When Principal.AWS is an array
+cross_account_ids := {account_id |
+    some statement in trust_policy.Statement
+    statement.Effect == "Allow"
+    principal := statement.Principal.AWS[_]
+    parts := split(principal, ":")
+    account_id := parts[4]
+}
+
+# When Principal.AWS is a single string
+cross_account_ids_single := {account_id |
+    some statement in trust_policy.Statement
+    statement.Effect == "Allow"
+    principal := statement.Principal.AWS
+    is_string(principal)
+    parts := split(principal, ":")
+    account_id := parts[4]
+}
+
+# Union both sets
+all_cross_account_ids := cross_account_ids | cross_account_ids_single
 ```
 
 ### Compare Timestamps
@@ -216,22 +344,6 @@ is_expired if {
 }
 ```
 
-### Parse JSON Strings
-
-Some fields (like S3 bucket policies) are JSON strings that need parsing:
-
-```rego
-# Parse a JSON string into an object
-parsed_policy := json.unmarshal(input.bucketPolicy)
-
-# Then traverse it normally
-result = "fail" if {
-    some stmt in parsed_policy.Statement
-    stmt.Effect == "Allow"
-    stmt.Principal == "*"
-}
-```
-
 ### Extract Account ID from ARN
 
 ```rego
@@ -241,50 +353,6 @@ extract_account(arn) := account_id if {
     count(parts) >= 5
     account_id := parts[4]
     account_id != ""
-}
-```
-
-### Multiple Failure Conditions (OR Logic)
-
-In Rego, multiple rules with the same name act as OR - the result is "fail" if ANY of them are true:
-
-```rego
-# Fails if condition A is true
-result = "fail" if {
-    condition_a
-}
-
-# Also fails if condition B is true (OR logic)
-result = "fail" if {
-    condition_b
-}
-```
-
-### Multiple Required Conditions (AND Logic)
-
-Conditions within a single rule body are implicitly AND:
-
-```rego
-# Fails only if BOTH conditions are true
-result = "fail" if {
-    condition_a    # AND
-    condition_b
-}
-```
-
-### Iterate Over Arrays
-
-```rego
-# "some i" iterates over array indices
-result = "fail" if {
-    some i
-    input.Items[i].Status == "open"
-}
-
-# "some item in" iterates over array values (Rego v1)
-result = "fail" if {
-    some item in input.Items
-    item.Status == "open"
 }
 ```
 
@@ -300,3 +368,40 @@ untrusted := {id |
     not id in globals.trusted_accounts
 }
 ```
+
+## Testing Best Practices
+
+### Fixture Naming Convention
+
+Fixtures follow the pattern: `<nativeType>_<rule_description>_<outcome>.json`
+
+Examples:
+- `role_consumer_no_type_tag.json` → fail (consumer role, missing tag)
+- `role_consumer_valid_type_tag.json` → pass (consumer role, correct tag)
+- `role_not_consumer.json` → skip (not a consumer role)
+- `rootuser_mfa_fail.json` → fail (root missing MFA)
+
+### Create Pass, Fail, and Skip Fixtures
+
+Every rule should have at minimum:
+- **fail** fixture: triggers the violation
+- **pass** fixture: satisfies the requirement
+- **skip** fixture (if applicable): resource that should be excluded from evaluation
+
+For tag enforcement rules, also consider a **bad tag** fixture (has the tag key but wrong value).
+
+### Sanitize Fixtures
+
+Always replace real AWS account IDs with `123456789012` in fixture files. When fetching real resources with `fetch_fixtures.py`, sanitize before committing.
+
+### Future-Proof Time-Based Fixtures
+
+For rules that check timestamps against `time.now_ns()`, use far-future dates (e.g., `2099-01-01T00:00:00Z`) in fixtures that should always pass the time check, and far-past dates for fixtures that should always fail. This prevents fixtures from breaking as time passes.
+
+### Globals Propagation Delay
+
+After deploying changes to the globals package via `terraform apply`, Wiz can take **10-30+ minutes** to propagate updates. During this window:
+
+- **JSON test mode** (`--input` flag / `cloudConfigurationRuleJsonTest` API) works immediately — use this for development
+- **Live resource tests** and the Wiz portal may use stale globals values
+- **New global variables** that haven't propagated yet will be `undefined`, which can cause rules to silently produce unexpected results (typically defaulting to "pass")

@@ -376,7 +376,7 @@ import data.customPackage.jtb75Globals as globals
 globals.my_variable   # "value"
 ```
 
-After creating or modifying a custom package, allow approximately 10 minutes for Wiz to recognize the changes before rules can reference new variables.
+After creating or modifying a custom package, allow 10-30+ minutes for Wiz to propagate the changes. The `cloudConfigurationRuleJsonTest` API resolves globals immediately; live resource tests and the portal may lag.
 
 ### Result Values
 
@@ -398,6 +398,100 @@ expectedConfiguration := "The desired compliant state"
 
 These strings appear in the Wiz finding and support dynamic values via `sprintf()`.
 
+### Native Types Reference
+
+The `target_native_types` field in Terraform and the `WizMetadata.nativeType` in resource JSON must match exactly. Here are the native types used in this repository:
+
+| Native Type | Resource | Tag Format | Key Fields |
+|-------------|----------|------------|------------|
+| `user` | IAM User | Array `[{Key, Value}]` via `input.Tags` | `UserName`, `Arn`, `userCredentials.AccessKey1Active`, `userCredentials.AccessKey1LastRotated`, `AttachedManagedPolicies` |
+| `role` | IAM Role | Array `[{Key, Value}]` via `input.Tags` | `RoleName`, `Arn`, `Path`, `AssumeRolePolicyDocument` (JSON string) |
+| `bucket` | S3 Bucket | Array `[{Key, Value}]` via `input.bucketTags` | `BucketName`, `bucketTags`, `bucketPolicy` (JSON string), `ServerSideEncryptionConfiguration` |
+| `rootUser` | Root Account | N/A | `AccountMFAEnabled` (number), `userCredentials.AccessKey1Active` (string "true"/"false"), `userCredentials.UserCreationTime` |
+| `apiGateway` | API Gateway | Map `{key: value}` via `input.Tags` | `Tags`, `Resources[].ResourceMethods` |
+| `ec2#encryptedsnapshot` | EC2 Encrypted Snapshot | Array `[{Key, Value}]` | `SnapshotId`, `createVolumePermissions` |
+| `ec2#unencryptedsnapshot` | EC2 Unencrypted Snapshot | Array `[{Key, Value}]` | `SnapshotId`, `createVolumePermissions` |
+| `ami` | AMI | Array `[{Key, Value}]` | `ImageId`, `launchPermissions` |
+| `rds#snapshot` | RDS Snapshot | Array `[{Key, Value}]` | `DBSnapshotIdentifier`, `dbSnapshotAttributes` |
+| `rds#clustersnapshot` | RDS Cluster Snapshot | Array `[{Key, Value}]` | `DBClusterSnapshotIdentifier`, `dbClusterSnapshotAttributes` |
+| `encryptionKey` | KMS Key | Array `[{Key, Value}]` | `KeyId`, `KeyMetadata.ExpirationModel`, `KeyRotationStatus` |
+
+**Important notes:**
+- `rootUser` credential fields like `AccessKey1Active` are strings (`"true"` / `"false"`), not booleans
+- `AssumeRolePolicyDocument` and `bucketPolicy` are JSON strings — use `json.unmarshal()` to parse
+- S3 bucket tags use `bucketTags` (not `Tags`)
+- API Gateway tags are a flat map, not an array of objects
+
+### Wiz Graph Entity Types
+
+When using `fetch_fixtures.py` to download resources, these are the graph entity type mappings:
+
+| Native Type | Graph Entity Type |
+|-------------|-------------------|
+| `user`, `role` | `SERVICE_ACCOUNT` |
+| `rootUser` | `USER_ACCOUNT` |
+| `bucket` | `BUCKET` |
+| `apiGateway` | `API_GATEWAY` |
+| `ec2#encryptedsnapshot`, `ec2#unencryptedsnapshot` | `SNAPSHOT` |
+
+### CCR Limitations
+
+- **CCRs cannot detect the absence of a resource.** Wiz only creates graph entities for resources that exist (e.g., it creates `awsSSO` entities for accounts with SSO configured). If a resource doesn't exist, there's nothing for a CCR to evaluate. Use Wiz Security Graph queries for absence detection.
+- **CCRs evaluate individual resources.** A single rule cannot correlate across multiple resources (e.g., "does this account have any roles with tag X?").
+
+## Rego Pitfalls and Best Practices
+
+### Rule Conflicts with Skip and Fail
+
+If a rule defines both `result = "skip"` and `result = "fail"`, ensure they can never both be true simultaneously. Use a guard pattern:
+
+```rego
+is_skip if { not is_target_resource }
+
+result = "skip" if { is_skip }
+
+# Guard: only evaluate fail when not skipping
+result = "fail" if {
+    not is_skip
+    not meets_requirement
+}
+```
+
+Without the `not is_skip` guard, Rego will error with a conflict if both rules try to assign different values to `result`.
+
+### String vs Boolean vs Number Fields
+
+AWS resource fields in Wiz JSON are not always the type you'd expect:
+
+```rego
+# WRONG: AccessKey1Active is a string, not a boolean
+input.userCredentials.AccessKey1Active == true
+
+# CORRECT:
+input.userCredentials.AccessKey1Active == "true"
+
+# WRONG: AccountMFAEnabled is a number, not a boolean
+input.AccountMFAEnabled == true
+
+# CORRECT:
+input.AccountMFAEnabled != 1
+```
+
+Always check the actual JSON structure from the Wiz CCR editor or a fetched fixture.
+
+### Undefined Fields Cause Silent Failures
+
+If a field doesn't exist in the input, any rule body referencing it becomes undefined (not false). The rule silently doesn't match rather than erroring:
+
+```rego
+# If input has no "Path" field, this entire rule is undefined — it won't fail
+result = "fail" if {
+    contains(input.Path, "/admin/")
+}
+```
+
+This is usually fine (the `default result = "pass"` catches it), but be aware that missing fields won't cause errors — they'll just default to pass.
+
 ## Debugging Tips
 
 1. **Use the Wiz CCR editor** to test policies against real resource data before deploying
@@ -406,6 +500,9 @@ These strings appear in the Wiz finding and support dynamic values via `sprintf(
 4. **Use `sprintf` in `currentConfiguration`** to surface the actual values that caused a failure
 5. **Test with both passing and failing data** to verify both code paths
 6. **Use the OPA Playground** (https://play.openpolicyagent.org/) for quick Rego syntax experiments
+7. **Use `--input` for instant feedback** - the JSON test API bypasses globals propagation delay
+8. **Check tag format** - API Gateway uses map tags, IAM/S3 use array tags; wrong iteration pattern silently fails
+9. **Check field types** - some fields are JSON strings needing `json.unmarshal()`, some are string booleans
 
 ## Further Reading
 

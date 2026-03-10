@@ -1,31 +1,45 @@
-# GP Policies - Wiz Custom Cloud Configuration Rules
+# GP Policies - Wiz Cloud Security Management
 
-This repository manages custom Wiz Cloud Configuration Rules (CCRs) using the Wiz Terraform provider. All rules are prefixed with `JTB75` for identification within the Wiz portal.
+This repository manages Wiz Cloud Configuration Rules (CCRs), remediation actions, and supporting test infrastructure. All Wiz resources are prefixed with `JTB75` for identification within the Wiz portal.
 
 ## Repository Structure
 
 ```
 gp-policies/
-├── provider.tf                    # Wiz Terraform provider configuration
-├── rego_packages.tf               # Custom Rego package definitions
-├── aws_*.tf                       # Terraform resource definitions for each CCR
-├── rego/
-│   ├── packages/
-│   │   └── jtb75_globals.rego     # Shared variables (account lists, thresholds, role names)
-│   └── aws_*.rego                 # Rego policy files for each CCR
-├── tests/
-│   ├── test_ccr.py                # Test a single rule against a fixture or live resources
-│   ├── validate_fixtures.py       # Run all fixtures against their rules (full test suite)
-│   ├── fetch_fixtures.py          # Fetch real resource JSONs from Wiz Graph API
-│   └── fixtures/                  # Mock resource JSON files for controlled testing
+├── ccr/                          # Wiz CCR rules (Wiz Terraform provider)
+│   ├── provider.tf               # Wiz Terraform provider configuration
+│   ├── rego_packages.tf          # Custom Rego package definitions
+│   ├── aws_*.tf                  # Terraform resource definitions for each CCR
+│   ├── rego/
+│   │   ├── packages/
+│   │   │   └── jtb75_globals.rego  # Shared variables (account lists, thresholds, role names)
+│   │   └── aws_*.rego            # Rego policy files for each CCR
+│   └── tests/
+│       ├── test_ccr.py           # Test a single rule against a fixture or live resources
+│       ├── validate_fixtures.py  # Run all fixtures against their rules (full test suite)
+│       ├── fetch_fixtures.py     # Fetch real resource JSONs from Wiz Graph API
+│       └── fixtures/             # Mock resource JSON files for controlled testing
+├── remediation-infra/            # EKS cluster for Wiz Outpost Lite (AWS Terraform provider)
+│   ├── vpc.tf                    # Dedicated VPC with public/private subnets
+│   ├── eks.tf                    # EKS cluster, node group, Pod Identity Agent
+│   ├── iam_remediation.tf        # Runner and worker IAM roles
+│   └── kubernetes.tf             # Namespace and service account
+├── test-infra/                   # Disposable AWS resources to trigger CCRs (AWS Terraform provider)
+│   ├── iam_roles.tf              # Roles with missing tags, untrusted trusts
+│   ├── iam_users.tf              # Users with managed policies, access keys
+│   ├── s3.tf                     # Buckets with untrusted sharing, missing encryption
+│   ├── snapshots.tf              # EC2 snapshots shared with untrusted accounts
+│   ├── rds.tf                    # RDS instances with low backup retention
+│   └── api_gateway.tf            # API Gateway methods without authorization
 ├── docs/
-│   ├── creating-rules.md          # Step-by-step guide for new CCRs
-│   └── rego-reference.md          # Rego language reference for Wiz CCRs
-├── RULES.md                       # Complete rules reference with fixtures
-├── .env                           # Wiz credentials (gitignored)
-├── .gitignore
-└── .terraform.lock.hcl            # Provider version lock
+│   ├── creating-rules.md         # Step-by-step guide for new CCRs
+│   └── rego-reference.md         # Rego language reference for Wiz CCRs
+├── RULES.md                      # Complete rules reference with fixtures
+├── .env                          # Credentials (gitignored)
+└── .gitignore
 ```
+
+Each top-level directory (`ccr/`, `remediation-infra/`, `test-infra/`) is an independent Terraform root with its own provider, state, and `terraform apply`.
 
 ## Current Rules
 
@@ -49,81 +63,74 @@ See [RULES.md](RULES.md) for the complete rules reference, including description
 
 - Terraform 0.14+
 - A Wiz service account with Custom Integration (GraphQL API) type and write permissions
+- AWS credentials (for test-infra and remediation-infra)
 
 ### Authentication
 
 Create a `.env` file (already gitignored):
 
 ```bash
+# Wiz credentials (for ccr/)
 export WIZ_CLIENT_ID=your-client-id
 export WIZ_CLIENT_SECRET=your-client-secret
+
+# AWS credentials (for test-infra/ and remediation-infra/)
+export AWS_ACCESS_KEY_ID=your-access-key
+export AWS_SECRET_ACCESS_KEY=your-secret-key
+export AWS_DEFAULT_REGION=us-east-1
 ```
 
-### Deploy
+### Deploy CCR Rules
 
 ```bash
 source .env
+cd ccr
 terraform init
 terraform plan
 terraform apply
 ```
 
-## Testing Rules
-
-The test script (`tests/test_ccr.py`) validates rules using the Wiz GraphQL API. It supports two modes:
-
-### Test Against Mock JSON (Recommended for Development)
-
-Use `--input` to test a rule against a local JSON fixture. This uses the `cloudConfigurationRuleJsonTest` API endpoint, which evaluates instantly without waiting for globals propagation.
+### Deploy Test Infrastructure
 
 ```bash
 source .env
+cd test-infra
+terraform init
+terraform plan
+terraform apply    # Creates non-compliant resources to trigger CCRs
+terraform destroy  # Clean up when done testing
+```
+
+### Deploy Remediation Infrastructure
+
+```bash
+source .env
+cd remediation-infra
+terraform init
+terraform plan
+terraform apply    # Creates EKS cluster, IAM roles, namespace
+```
+
+## Testing Rules
+
+All test commands should be run from the `ccr/` directory:
+
+```bash
+source .env
+cd ccr
 
 # Test a rule against a specific fixture
 python tests/test_ccr.py rego/aws_support_role_missing_type_tag.rego role \
   --input tests/fixtures/role_support_no_type_tag.json
-```
 
-Each rule has fixtures for pass, fail, and skip (where applicable). Fixture names follow the pattern `<type>_<rule>_<outcome>.json`.
-
-### Run the Full Test Suite
-
-Validate all fixtures against their rules in one command:
-
-```bash
-source .env
+# Run the full test suite (111 fixture/rule combinations)
 python tests/validate_fixtures.py
-```
 
-This runs all 111 fixture/rule combinations and reports pass/fail. When adding a new rule, add its test cases to `validate_fixtures.py` in the `TESTS` list.
-
-### Fetch Real Resource JSON for Fixtures
-
-Use the fixture fetcher to download real resource JSONs from the Wiz Graph API:
-
-```bash
-source .env
-
-# Fetch 3 role resources
+# Fetch real resource JSONs for fixtures
 python tests/fetch_fixtures.py role --count 3
 
-# Fetch snapshot resources
-python tests/fetch_fixtures.py "ec2#unencryptedsnapshot" --count 2
-```
-
-This uses a two-step approach: `graphSearch` to find entity IDs, then `graphEntity` with `providerData` to get the raw cloud resource JSON. Downloaded fixtures can be modified to create pass/fail/skip variants.
-
-### Test Against Live Resources
-
-Omit `--input` to evaluate the rule against real cloud resources:
-
-```bash
-# Test against up to 500 live resources
+# Test against live resources
 python tests/test_ccr.py rego/aws_missing_type_tag.rego user --first 500
-
-# Scope to specific accounts
-python tests/test_ccr.py rego/aws_snapshot_untrusted_sharing.rego ec2#unencryptedsnapshot \
-  --accounts <account-uuid>
 ```
 
 **Note:** After deploying changes to the globals package via Terraform, allow up to 30 minutes for Wiz to propagate the updates before testing against live resources. The JSON test mode (`--input`) is not affected by this delay.
