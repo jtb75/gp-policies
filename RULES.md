@@ -500,6 +500,25 @@ Fails if an AWS root account has been used (password login or access key) within
 | `rootuser_fail.json` | FAIL — old account, root used today |
 | `rootuser_skip.json` | SKIP — account younger than 15 days |
 
+### Root Account with Programmatic Access Key
+
+| | |
+|---|---|
+| **Terraform** | `aws_root_access_key.tf` |
+| **Rego** | `rego/aws_root_access_key.rego` |
+| **Native Type** | `rootUser` |
+| **Severity** | CRITICAL |
+| **Globals** | None |
+
+Fails if an AWS root account has an active programmatic access key (AccessKey1Active or AccessKey2Active is "true"). Root accounts should never have access keys.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `rootuser_access_key_pass.json` | PASS — no active access keys |
+| `rootuser_access_key_fail.json` | FAIL — AccessKey1Active is true |
+
 ## Data Protection
 
 ### Classified S3 Buckets Must Be Encrypted
