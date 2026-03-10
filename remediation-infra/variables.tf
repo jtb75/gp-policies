@@ -52,6 +52,12 @@ variable "remediation_target_account_ids" {
   default     = []
 }
 
+variable "cluster_admin_arns" {
+  description = "List of IAM ARNs to grant cluster admin access"
+  type        = list(string)
+  default     = ["arn:aws:iam::695862934856:user/odl_user_2120988"]
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
