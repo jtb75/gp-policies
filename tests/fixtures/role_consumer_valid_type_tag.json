@@ -1,0 +1,10 @@
+{
+  "RoleName": "EventConsumerProcessor",
+  "Arn": "arn:aws:iam::123456789012:role/EventConsumerProcessor",
+  "Tags": [
+    { "Key": "type", "Value": "consumer" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

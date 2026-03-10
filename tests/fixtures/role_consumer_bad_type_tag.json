@@ -1,0 +1,10 @@
+{
+  "RoleName": "QueueConsumerRole",
+  "Arn": "arn:aws:iam::123456789012:role/QueueConsumerRole",
+  "Tags": [
+    { "Key": "type", "Value": "service" }
+  ],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

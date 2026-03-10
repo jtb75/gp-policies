@@ -1,0 +1,8 @@
+{
+  "RoleName": "DataConsumerReadOnly",
+  "Arn": "arn:aws:iam::123456789012:role/DataConsumerReadOnly",
+  "Tags": [],
+  "WizMetadata": {
+    "nativeType": "role"
+  }
+}

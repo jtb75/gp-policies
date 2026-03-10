@@ -127,6 +127,11 @@ TESTS = [
     ("bucket_sharing_fail_public_acl.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_fail_inventory.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "fail"),
     ("bucket_sharing_pass_trusted_policy.json", "rego/aws_s3_bucket_untrusted_sharing.rego", "bucket", "pass"),
+    # Consumer role missing type tag
+    ("role_consumer_no_type_tag.json", "rego/aws_consumer_role_missing_type_tag.rego", "role", "fail"),
+    ("role_consumer_valid_type_tag.json", "rego/aws_consumer_role_missing_type_tag.rego", "role", "pass"),
+    ("role_consumer_bad_type_tag.json", "rego/aws_consumer_role_missing_type_tag.rego", "role", "fail"),
+    ("role_not_consumer.json", "rego/aws_consumer_role_missing_type_tag.rego", "role", "skip"),
     # Vendor role auto-tag based on trust relationship
     ("role_vendor_auto_tag_fail.json", "rego/aws_vendor_role_auto_tag.rego", "role", "fail"),
     ("role_vendor_auto_tag_pass.json", "rego/aws_vendor_role_auto_tag.rego", "role", "pass"),

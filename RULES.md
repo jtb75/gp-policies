@@ -259,6 +259,27 @@ Fails IAM roles matching names in `kbs_service_roles` that are missing a `type` 
 | `role_service_bad_type_tag.json` | FAIL — CICDServiceRole with `type=unknown` |
 | `role_not_service.json` | SKIP — role name not in list |
 
+### Consumer Role Missing Type Tag
+
+| | |
+|---|---|
+| **Terraform** | `aws_consumer_role_missing_type_tag.tf` |
+| **Rego** | `rego/aws_consumer_role_missing_type_tag.rego` |
+| **Native Type** | `role` |
+| **Severity** | HIGH |
+| **Globals** | None |
+
+Fails IAM roles with "consumer" in their name (case-insensitive) that are missing a `type:consumer` tag or have a different type tag value. Skips roles without "consumer" in the name.
+
+**Fixtures:**
+
+| Fixture | Expected |
+|---------|----------|
+| `role_consumer_valid_type_tag.json` | PASS — EventConsumerProcessor with `type=consumer` |
+| `role_consumer_no_type_tag.json` | FAIL — DataConsumerReadOnly with no type tag |
+| `role_consumer_bad_type_tag.json` | FAIL — QueueConsumerRole with `type=service` |
+| `role_not_consumer.json` | SKIP — role name doesn't contain "consumer" |
+
 ### Vendor Role Auto-Tag (Trust-Based Detection)
 
 | | |
