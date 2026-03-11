@@ -24,7 +24,7 @@ resource "aws_ebs_snapshot" "test_snapshot" {
 # Triggers: aws_snapshot_untrusted_sharing (shared with untrusted account)
 resource "aws_snapshot_create_volume_permission" "test_untrusted" {
   snapshot_id = aws_ebs_snapshot.test_snapshot.id
-  account_id  = "999999999999" # Fake account — snapshot API doesn't validate
+  account_id  = "498752334630"
 }
 
 # Second snapshot for PASS case (no sharing)
