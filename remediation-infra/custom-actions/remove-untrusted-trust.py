@@ -8,9 +8,18 @@ the trusted account lists. Removes statements with wildcard ("*") principals
 and strips untrusted account ARNs from multi-principal statements.
 Service principals (e.g. ec2.amazonaws.com) are always preserved.
 
-IAM Permissions required:
+The removed principals are saved as a tag (wiz:removed-principals) on the
+role, enabling the revert function to re-add them to the trust policy.
+
+IAM Permissions required (remediate):
 - iam:GetRole
 - iam:UpdateAssumeRolePolicy
+- iam:TagRole
+
+IAM Permissions required (revert):
+- iam:GetRole
+- iam:UpdateAssumeRolePolicy
+- iam:UntagRole
 """
 
 import json
@@ -28,6 +37,8 @@ TRUSTED_ACCOUNTS = {
     "234567890123",
     "345678901234",
 }
+
+BACKUP_TAG_KEY = "wiz:removed-principals"
 
 
 def _extract_account_id(arn):
@@ -146,6 +157,25 @@ def remediate(context: AwsRemediationContext):
             "Manual review required."
         )
 
+    # Save removed principals as a tag for revert (comma-separated)
+    removed_value = ",".join(removed)
+    if len(removed_value) > 256:
+        logger.warning(
+            "Removed principals list too large for tag, revert will not be available",
+            role=role_name,
+            length=len(removed_value),
+        )
+    else:
+        try:
+            iam.tag_role(
+                RoleName=role_name,
+                Tags=[{"Key": BACKUP_TAG_KEY, "Value": removed_value}],
+            )
+            logger.info("Saved removed principals to tag", role=role_name, removed=removed_value)
+        except ClientError as e:
+            error_msg = e.response["Error"]["Message"]
+            logger.warning("Failed to save backup tag", role=role_name, error=error_msg)
+
     # Update the trust policy
     try:
         iam.update_assume_role_policy(
@@ -162,6 +192,78 @@ def remediate(context: AwsRemediationContext):
         role=role_name,
         removed_principals=removed,
     )
+
+
+def revert(context: AwsRemediationContext):
+    remediation_args: TargetRemediationArgs = context.get_remediation_args()
+
+    role_name = remediation_args.name
+    region = remediation_args.region
+
+    logger.info("Starting trust policy revert", role=role_name, region=region)
+
+    session: boto3.Session = context.get_session()
+    iam = session.client("iam", region_name=region)
+
+    # Get the backup tag
+    try:
+        response = iam.get_role(RoleName=role_name)
+        existing_tags = {t["Key"]: t["Value"] for t in response["Role"].get("Tags", [])}
+    except ClientError as e:
+        error_msg = e.response["Error"]["Message"]
+        logger.error("Failed to get role", role=role_name, error=error_msg)
+        raise Exception(error_msg)
+
+    removed_value = existing_tags.get(BACKUP_TAG_KEY)
+    if not removed_value:
+        raise Exception(
+            f"Role {role_name} has no removed principals tag ({BACKUP_TAG_KEY}). "
+            "Cannot revert."
+        )
+
+    removed_principals = removed_value.split(",")
+    logger.info("Re-adding removed principals", role=role_name, principals=removed_principals)
+
+    # Get the current trust policy to add principals back
+    trust_policy = response["Role"]["AssumeRolePolicyDocument"]
+
+    # Re-add each removed principal as a new Allow/AssumeRole statement
+    for principal in removed_principals:
+        if principal == "*":
+            statement = {
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "sts:AssumeRole",
+            }
+        else:
+            statement = {
+                "Effect": "Allow",
+                "Principal": {"AWS": principal},
+                "Action": "sts:AssumeRole",
+            }
+        trust_policy.setdefault("Statement", []).append(statement)
+
+    try:
+        iam.update_assume_role_policy(
+            RoleName=role_name,
+            PolicyDocument=json.dumps(trust_policy),
+        )
+    except ClientError as e:
+        error_msg = e.response["Error"]["Message"]
+        logger.error("Failed to restore trust policy", role=role_name, error=error_msg)
+        raise Exception(error_msg)
+
+    # Remove the backup tag
+    try:
+        iam.untag_role(RoleName=role_name, TagKeys=[BACKUP_TAG_KEY])
+    except ClientError as e:
+        logger.warning(
+            "Failed to remove backup tag",
+            role=role_name,
+            error=e.response["Error"]["Message"],
+        )
+
+    logger.info("Successfully reverted trust policy", role=role_name)
 
 
 if __name__ == "__main__":
