@@ -5,7 +5,9 @@ agent:
 imagePullSecrets:
 - name: wiz-outpost-lite-image-pull
 runners:
-  rem-aws-ebs-007:
+  rem-custom-0009:
     enabled: true
-  rem-custom-0008:
+  rem-custom-0010:
+    enabled: true
+  rem-custom-0011:
     enabled: true
