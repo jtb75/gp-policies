@@ -2,22 +2,6 @@
 # Remediation & Response Deployment — manages Outpost Lite deployment config
 # =============================================================================
 
-# Look up the built-in EBS snapshot tagging action
-data "wiz_response_actions_catalog" "ebs_007" {
-  search = "rem-aws-ebs-007"
-  cloud_platform {
-    equals = ["AWS"]
-  }
-  builtin = "true"
-}
-
-locals {
-  # First matching built-in catalog item for EBS-007
-  ebs_007_item    = tolist(data.wiz_response_actions_catalog.ebs_007.response_action_catalog_items)[0]
-  ebs_007_id      = local.ebs_007_item.id
-  ebs_007_version = tolist(local.ebs_007_item.versions)[0].id
-}
-
 resource "wiz_remediation_and_response_deployment_v2" "main" {
   name                 = "JTB75 Remediation"
   resource_name_prefix = "Wiz"
@@ -35,26 +19,6 @@ resource "wiz_remediation_and_response_deployment_v2" "main" {
 
   auto_tag {
     enabled = false
-  }
-
-  # --- Built-in: EBS snapshot tagging (rem-aws-ebs-007) ---
-  deployed_response_action_configs {
-    response_action_catalog_item         = local.ebs_007_id
-    response_action_catalog_item_version = local.ebs_007_version
-    deployed_response_action_instance_configs {
-      status        = "ENABLED"
-      is_disruptive = false
-      target {
-        graph_entity_native_type = "ec2#unencryptedsnapshot"
-      }
-    }
-    deployed_response_action_instance_configs {
-      status        = "ENABLED"
-      is_disruptive = false
-      target {
-        graph_entity_native_type = "ec2#encryptedsnapshot"
-      }
-    }
   }
 
   # --- Custom: Tag consumer role ---
